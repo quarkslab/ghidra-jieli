@@ -833,3 +833,216 @@
     cres=0;
 <end>
 }
+
+#
+# iff (rA < rB) then { ... } else { ... }
+#
+:iff (regA < eregC) { is group=7 & ins0411=0x99 & regA ; eregC & imm1623=0x80 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (regA f< eregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+#
+# iff (rA <= rB) then { ... } else { ... }
+#
+:iff (regA "<=" eregC) { is group=7 & ins0411=0xC9 & regA ; eregC & imm1623=0x80 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (regA f<= eregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+###########################################################################################
+# Double-Precision Floating-Point Conditional Blocks (iff)
+###########################################################################################
+
+#
+# iff (rA == rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA == edregC) { is group=7 & ins0411=0x81 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f== edregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+#
+# iff (rA u!= rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA "u!=" edregC) { is group=7 & ins0411=0x89 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f== edregC) goto <else>;
+    cres=1;
+    goto <end>;
+
+<else>
+    cres=0;
+<end>
+}
+
+#
+# iff (rA u>= rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA "u>=" edregC) { is group=7 & ins0411=0x91 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f< edregC) goto <else>;
+    cres=1;
+    goto <end>;
+
+<else>
+    cres=0;
+<end>
+}
+
+#
+# iff (rA < rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA < edregC) { is group=7 & ins0411=0x99 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f< edregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+#
+# iff (rA <= rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA "<=" edregC) { is group=7 & ins0411=0xC9 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f<= edregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+#
+# iff (rA >= rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA ">=" edregC) { is group=7 & ins0411=0xD1 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f>= edregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+#
+# iff (rA u< rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA "u<" edregC) { is group=7 & ins0411=0xD9 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f>= edregC) goto <else>;
+    cres=1;
+    goto <end>;
+
+<else>
+    cres=0;
+<end>
+}
+
+#
+# iff (rA > rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA > edregC) { is group=7 & ins0411=0xE1 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f> edregC) goto <then>;
+    cres=0;
+    goto <end>;
+
+<then>
+    cres=1;
+<end>
+}
+
+#
+# iff (rA u<= rB) then { ... } else { ... }  (double-precision)
+#
+:iff (dregA "u<=" edregC) { is group=7 & ins0411=0xE9 & dregA ; edregC & imm1623=0xc0 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (dregA f> edregC) goto <else>;
+    cres=1;
+    goto <end>;
+
+<else>
+    cres=0;
+<end>
+}
