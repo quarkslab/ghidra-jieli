@@ -6,7 +6,7 @@ A comprehensive Ghidra processor module for JieLi CPU architectures (**PI32**, *
 
 | Architecture | Status | Instruction Coverage | Notes |
 | :--- | :--- | :--- | :--- |
-| **PI32V2** | **Complete (Primetime Ready)** | **100% (1,214 / 1,214 LLVM routes)** | 796 SLEIGH constructors covering all 10 instruction categories, delay slots, loops, SIMD, MAC, Cordic, and floating-point. |
+| **PI32V2** | Mature | Extensive | Comprehensive SLEIGH specification covering all 10 instruction categories, delay slots, loops, SIMD, MAC, Cordic, and floating-point. |
 | **PI32** | Functional | Partial | Legacy 32-bit core used on older JieLi SoCs (AC690x, etc.). |
 | **Q32S** | Functional | Partial | Compact 32-bit core used on low-power chips (BD19, BD29 / AC632N, AC630N). |
 
@@ -14,12 +14,13 @@ A comprehensive Ghidra processor module for JieLi CPU architectures (**PI32**, *
 
 ## PI32V2 Features
 
-### Complete Instruction Coverage & Decompiler Semantics
-- **100% Covered**: All 1,214 vendor LLVM 4.0.1 decoding table paths across all 10 instruction categories (arithmetic, logic, shifts/rotates, bitops, moves/immediates, load/store, control flow, SIMD, MAC/DSP, and floating-point).
+### Broad Instruction Coverage & Decompiler Semantics
+- **Extensive Instruction Set Support**: Implements the vendor LLVM decoding paths and known assembly forms across all 10 instruction categories (arithmetic, logic, shifts/rotates, bitops, moves/immediates, load/store, control flow, SIMD, MAC/DSP, and floating-point).
 - **Control Flow**: Accurate handling of delayed jumps (`j.f`, `call.f`, `ret.f`, `reti.f`), conditional branches (`if (cond) goto`), hardware loops (`repeat`, `loop`), and pipeline controls (`flushinv`, `idle`, `halt`).
-- **SIMD & DSP**: Complete vector pack/unpack, vector arithmetic, dot products, and multi-precision multiply-accumulate operations with saturation.
+- **SIMD & DSP**: Vector pack/unpack, vector arithmetic, dot products, and multi-precision multiply-accumulate operations with saturation.
 - **Decompiler Cleanliness**: Configured `<volatile>` memory ranges for peripheral registers and `<inferptrbounds>` pointer inference ranges so hardware polling loops and memory accesses decompile cleanly without dead-code elimination.
 - **ELF Detection**: Integrated `JieLi.opinion` automatically binds ELF machine ID `241` (`0xf1`) to `JieLi pi32v2`.
+
 
 ### Supported SoC Variants
 - **`default`**: Generic, memory-agnostic PI32V2 core definition suitable for any JieLi PI32V2 target.
