@@ -10,7 +10,5 @@
 #
 :sub regAl, regBl, regCxl is group=6 & ins0912=0xF & regAl & regBl & regCxl
 {
-    # next instruction is executed first
-    delayslot(1);
 	regAl = regBl - regCxl;
 }

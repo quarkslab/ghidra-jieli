@@ -29,21 +29,41 @@
 #
 # [rA+imm8] |= rB
 #
-:or [eregA+offset], eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823 & imm1617=0
-[ offset = imm1823<<2; ]
+:or [eregA+offset], eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823s & imm1617=0
+[ offset = imm1823s<<2; ]
 {
     addr:4 = eregA + offset;
     *:4 addr = *:4 addr | eregC;
 }
 
 #
-# [rA+imm6] |= packedimm12
+# [rA+offset] |= packedimm12
 #
-:or [eregA+#offset], #packedimm12 is group=7 & ins0611=0x3C  & imm0005; eregA & packedimm12
-[ offset = imm0005*4; ]
+:or [eregA+#offset], #packedimm12 is group=7 & ins0611=0x3C & imm0005s ; eregA & packedimm12
+[ offset = imm0005s<<2; ]
 {
     addr:4 = eregA + offset;
     *:4 addr = *:4 addr | packedimm12;
+}
+
+#
+# [rA+offset] ^= packedimm12
+#
+:xor [eregA+#offset], #packedimm12 is group=7 & ins0611=0x3D & imm0005s ; eregA & packedimm12
+[ offset = imm0005s<<2; ]
+{
+    addr:4 = eregA + offset;
+    *:4 addr = *:4 addr ^ packedimm12;
+}
+
+#
+# [rA+offset] &= packedimm12
+#
+:and [eregA+#offset], #packedimm12 is group=7 & ins0611=0x3E & imm0005s ; eregA & packedimm12
+[ offset = imm0005s<<2; ]
+{
+    addr:4 = eregA + offset;
+    *:4 addr = *:4 addr & packedimm12;
 }
 
 ###########################################################################################
@@ -73,6 +93,16 @@
 :xor eregA, eregB, eregC is group=7 & ins0011=0x190 ; eregA & eregB & eregC & imm1619=1
 {
     eregA = eregB ^ eregC;
+}
+
+#
+# [rA+imm8] ^= rB
+#
+:xor [eregA+offset], eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823s & imm1617=1
+[ offset = imm1823s<<2; ]
+{
+    addr:4 = eregA + offset;
+    *:4 addr = *:4 addr ^ eregC;
 }
 
 #
@@ -212,8 +242,8 @@
 #
 # [rA+imm8] &= rB
 #
-:and [eregA+offset], eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823 & imm1617=2
-[ offset = imm1823<<2; ]
+:and [eregA+offset], eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823s & imm1617=2
+[ offset = imm1823s<<2; ]
 {
     addr:4 = eregA + offset;
     *:4 addr = *:4 addr & eregC;
@@ -222,8 +252,8 @@
 #
 # [rA+imm8] &= not(rB)
 #
-:and [eregA+offset], ~eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823 & imm1617=3
-[ offset = imm1823<<2; ]
+:and [eregA+offset], ~eregC is group=7 & ins0011=0x864 ; eregA & eregC & imm1823s & imm1617=3
+[ offset = imm1823s<<2; ]
 {
     addr:4 = eregA + offset;
     *:4 addr = *:4 addr & (~eregC);
@@ -237,7 +267,7 @@
 # rA <= insert(rB, pos:imm5, len:imm5) # special case
 # insert regA, regB, pos, len
 #
-:insert regA, eregA, imm2327, imm1822 is group=7 & ins0411=0x1a & regA ; eregA & imm1617 & imm1822 & imm2327
+:insert regA, eregA, imm2327, imm1822 is group=7 & ins0411=0x1a & regA ; eregA & imm1617=0 & imm1822 & imm2327
 {
     # Create a bitmask for source register
     smask = ((1 << imm1822) - 1) & 0xffffffff;

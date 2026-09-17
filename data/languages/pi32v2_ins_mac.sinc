@@ -1,0 +1,595 @@
+#############################################################################
+# PI32V2 Multiply-Accumulate (MAC) & DSP Streaming Instructions
+#############################################################################
+
+# MLSZw_drr: rD64 -= rB * rC (u)
+:mulsub.z edregA, eregB, eregC is group=7 & ins0011=0x1fe ; edregA & eregB & eregC & imm1619=0 & imm2828=0
+{
+    local B:8 = zext(eregB);
+    local C:8 = zext(eregC);
+    edregA = edregA - (B * C);
+}
+
+# MLSSw_drr: rD64 -= rB * rC (s)
+:mulsub.s edregA, eregB, eregC is group=7 & ins0011=0x1fe ; edregA & eregB & eregC & imm1619=0 & imm2828=1
+{
+    local B:8 = sext(eregB);
+    local C:8 = sext(eregC);
+    edregA = edregA - (B * C);
+}
+
+:mul.z edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e0 ; edregA & imm2828=0 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mul.s edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e0 ; edregA & imm2828=1 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:muladd.z edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e4 ; edregA & imm2828=0 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladd.s edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e4 ; edregA & imm2828=1 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulsub.z edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e6 ; edregA & imm2828=0 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsub.s edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e6 ; edregA & imm2828=1 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:muladdh.z edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8ec ; edregA & imm2828=0 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladdh.s edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8ec ; edregA & imm2828=1 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulh.z edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e8 ; edregA & imm2828=0 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulh.s edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8e8 ; edregA & imm2828=1 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulsubh.z edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8ee ; edregA & imm2828=0 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsubh.s edregA, [eregB++=eregD], [eregC++=eregD2] is group=7 & ins0012=0x8ee ; edregA & imm2828=1 & eregC & eregB & eregD & eregD2
+{
+    local stepB:4 = eregD s>> 16;
+    local stepC:4 = (eregD << 16) s>> 16;
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + stepB;
+    eregC = eregC + stepC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mul.z edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0x96 & imm0003 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; immC = imm0003 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mul.s edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0x96 & imm0003 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; immC = imm0003 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:muladd.z edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0x9e & imm0003 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; immC = imm0003 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladd.s edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0x9e & imm0003 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; immC = imm0003 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulsub.z edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xc6 & imm0003 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; immC = imm0003 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsub.s edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xc6 & imm0003 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; immC = imm0003 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:muladdh.z edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xd6 & imm0003 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; immC = imm0003 << 2; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladdh.s edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xd6 & imm0003 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; immC = imm0003 << 2; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulh.z edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xce & imm0003 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; immC = imm0003 << 2; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulh.s edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xce & imm0003 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; immC = imm0003 << 2; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulsubh.z edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xde & imm0003 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; immC = imm0003 << 2; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = zext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsubh.s edregA, [eregB++=immB], [eregC++=immC] is group=7 & ins0412=0xde & imm0003 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; immC = imm0003 << 2; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C_val:4 = *:4 eregC;
+    local C:8 = sext(C_val);
+    eregB = eregB + immB;
+    eregC = eregC + immC;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mul.z edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe60 ; edregA & imm2828=0 & eregC & eregB & eregD
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mul.s edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe60 ; edregA & imm2828=1 & eregC & eregB & eregD
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:muladd.z edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe64 ; edregA & imm2828=0 & eregC & eregB & eregD
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladd.s edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe64 ; edregA & imm2828=1 & eregC & eregB & eregD
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulsub.z edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe66 ; edregA & imm2828=0 & eregC & eregB & eregD
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsub.s edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe66 ; edregA & imm2828=1 & eregC & eregB & eregD
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:muladdh.z edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe6c ; edregA & imm2828=0 & eregC & eregB & eregD
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladdh.s edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe6c ; edregA & imm2828=1 & eregC & eregB & eregD
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulh.z edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe68 ; edregA & imm2828=0 & eregC & eregB & eregD
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulh.s edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe68 ; edregA & imm2828=1 & eregC & eregB & eregD
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulsubh.z edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe6e ; edregA & imm2828=0 & eregC & eregB & eregD
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsubh.s edregA, [eregB++=eregD], eregC is group=7 & ins0012=0xe6e ; edregA & imm2828=1 & eregC & eregB & eregD
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + eregD;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mul.z edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee0 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mul.s edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee0 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:muladd.z edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee4 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladd.s edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee4 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulsub.z edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee6 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsub.s edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee6 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 2; ]
+{
+    local B_val:4 = *:4 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:muladdh.z edregA, [eregB++=immB], eregC is group=7 & ins0012=0xeec ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:muladdh.s edregA, [eregB++=immB], eregC is group=7 & ins0012=0xeec ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA + prod;
+}
+
+:mulh.z edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee8 ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulh.s edregA, [eregB++=immB], eregC is group=7 & ins0012=0xee8 ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = prod;
+}
+
+:mulsubh.z edregA, [eregB++=immB], eregC is group=7 & ins0012=0xeee ; edregA & imm2828=0 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = zext(B_val);
+    local C:8 = zext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}
+
+:mulsubh.s edregA, [eregB++=immB], eregC is group=7 & ins0012=0xeee ; edregA & imm2828=1 & eregC & eregB & imm1619
+[ immB = imm1619 << 1; ]
+{
+    local B_val:2 = *:2 eregB;
+    local B:8 = sext(B_val);
+    local C:8 = sext(eregC);
+    eregB = eregB + immB;
+    local prod:8 = B * C;
+    edregA = edregA - prod;
+}

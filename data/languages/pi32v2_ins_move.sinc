@@ -45,6 +45,38 @@
 }
 
 #
+# sp = uspn (banked user stack pointer)
+#
+:mov sp, uspn is group=0 & ins0012=0x1444 & sp & uspn
+{
+	sp = uspn;
+}
+
+#
+# sp = sspn (banked supervisor stack pointer)
+#
+:mov sp, sspn is group=0 & ins0012=0x1445 & sp & sspn
+{
+	sp = sspn;
+}
+
+#
+# uspn = sp (banked user stack pointer)
+#
+:mov uspn, sp is group=0 & ins0012=0x1446 & sp & uspn
+{
+	uspn = sp;
+}
+
+#
+# sspn = sp (banked supervisor stack pointer)
+#
+:mov sspn, sp is group=0 & ins0012=0x1447 & sp & sspn
+{
+	sspn = sp;
+}
+
+#
 # rA_rA = rB_rB
 # => mov rA_rA, rB_rB
 #
@@ -61,6 +93,7 @@
 {
 	regA = regB;
 }
+
 
 #################################################################
 # Special registers move

@@ -1,0 +1,888 @@
+#############################################################################
+# PI32V2 SIMD / DSP Vector Instruction Definitions
+#############################################################################
+
+:simd_align8_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_align16_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_align24_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_pack_rhh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=0 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_packb_usat_rd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=0 & imm1717=0
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_packb_ssat_rd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=1 & imm1717=0
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_packb_norm_rd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=0 & imm1717=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_packb_stou_rd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=1 & imm1717=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_vsat16z_rd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=0
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_vsat16s_rd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_unpackbz_dr edregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; edregA & eregC & eregB & imm1616=0 & imm1717=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_unpackbs_dr edregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; edregA & eregC & eregB & imm1616=1 & imm1717=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_unpack4z_dr edregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; edregA & eregC & eregB & imm1616=0 & imm1717=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_unpack4s_dr edregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; edregA & eregC & eregB & imm1616=1 & imm1717=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mts0_dd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=0
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_mts1_dd edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; edregA & edregC & eregB & imm1616=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_lsl_hhi eregA, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & imm2627=0 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_asl_hhi eregA, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & imm2627=1 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_lsr_hhi eregA, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & imm2627=2 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_asr_hhi eregA, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & imm2627=3 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_lsr8v_rri eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_asr16v_ddi edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; edregA & edregC & eregB & imm1919=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_lsl_hhr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_asl_hhr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_lsr_hhr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_asr_hhr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_cshf_hhr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=1 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_cshfs_hhr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=1 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_lslv_rri eregA, eregB is group=7 & ins0611=0x10 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & imm2627=0 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_aslv_rri eregA, eregB is group=7 & ins0611=0x10 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & imm2627=1 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_lsrv_rri eregA, eregB is group=7 & ins0611=0x10 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & imm2627=2 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_asrv_rri eregA, eregB is group=7 & ins0611=0x10 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & imm2627=3 & eregB
+{
+    eregA = SIMD_Op(eregB);
+}
+
+:simd_lslv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_aslv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_lsrv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_asrv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_cshfv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_cshfsv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qabsla16zv_drr edregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; edregA & eregC & eregB & imm1717=0 & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_interop8v_drr edregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; edregA & eregC & eregB & imm1717=1 & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_add8v_ddr edregA, edregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; edregA & edregC & eregB & imm1818=1 & imm1919=0
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_hadd8v_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1717=0 & imm1818=0 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mulsum8uv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1717=1 & imm1818=0 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mulsum8sv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1717=0 & imm1818=1 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mulsum8mv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1717=1 & imm1818=1 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_abs_hh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_negs_hh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_maxz_hhh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_maxs_hhh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_minz_hhh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mins_hhh eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0202=1 & ins0303=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_absv_rr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_negsv_rr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_maxzv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_maxsv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_minzv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_minsv_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_negs32_rr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qadd32z_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsub32z_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=0 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qadd32s_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsub32s_rrr eregA, eregC, eregB is group=7 & ins0611=0x10 & ins0000=1 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop32zv_drrrr edregA, eregC, eregB is group=7 & ins0611=0x11 & ins0000=0 ; edregA & eregC & eregB
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop32sv_drrrr edregA, eregC, eregB is group=7 & ins0611=0x11 & ins0000=1 ; edregA & eregC & eregB
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_add16_hhi eregA, eregC, eregB is group=7 & ins0611=0x12 & ins0505=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_sub16_hhi eregA, eregC, eregB is group=7 & ins0611=0x12 & ins0505=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qaddz16_hhi eregA, eregC, eregB is group=7 & ins0611=0x12 & ins0000=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=0 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsubz16_hhi eregA, eregC, eregB is group=7 & ins0611=0x12 & ins0000=0 & ins0505=1 ; eregA & eregC & eregB & imm1616=1 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qadds16_hhi eregA, eregC, eregB is group=7 & ins0611=0x12 & ins0000=1 & ins0505=1 ; eregA & eregC & eregB & imm1616=0 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsubs16_hhi eregA, eregC, eregB is group=7 & ins0611=0x12 & ins0000=1 & ins0505=1 ; eregA & eregC & eregB & imm1616=1 & imm1717=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16zv_rhhi eregA, eregC, eregB is group=7 & ins0611=0x13 & ins0000=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16sv_rhhi eregA, eregC, eregB is group=7 & ins0611=0x13 & ins0000=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_add16_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_sub16_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qaddz16_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsubz16_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qadds16_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsubs16_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qaddz16x2_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsubz16x2_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qadds16x2_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qsubs16x2_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hadd16z_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hsub16z_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hadd16s_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hsub16s_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hadd16rndz_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hsub16rndz_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hadd16rnds_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hsub16rnds_hhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB & imm1616=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16zv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16sv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16x2zv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16x2sv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hinterop16zv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hinterop16sv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hinterop16rndzv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_hinterop16rndsv_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qinterop16zv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_qinterop16sv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_qinterop16x2zv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_qinterop16x2sv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_hinterop16zv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=1 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_hinterop16sv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=1 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_hinterop16rndzv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_hinterop16rndsv_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=0 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_all16v_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_all8v_rrr eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_any16v_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_any8v_rrr eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_cmp16v_ddd edregA, edregC, eregB is group=7 & ins0611=0x14 & ins0000=0 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=1 ; edregA & edregC & eregB
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_cmp8v_rrr eregA, eregC, eregB is group=7 & ins0611=0x14 & ins0000=1 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=1 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16z_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16s_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2z_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2s_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16z_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16s_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2z_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2s_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16z_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16s_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2z_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2s_hhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=0 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16z_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16s_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2z_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2s_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=0 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16z_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16s_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2z_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2s_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0202=0 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16z_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16s_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2z_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2s_rhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0202=1 & ins0303=1 & ins0404=1 & ins0505=0 ; eregA & eregC & eregB
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16z_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16z_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16z_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16s_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16s_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16s_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2z_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2z_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2z_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2s_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2s_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2s_rhhhh eregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0404=0 & ins0505=1 ; eregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16z_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16z_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16z_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=0 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16s_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16s_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16s_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=0 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2z_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2z_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2z_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=0 & ins0101=1 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16x2s_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16x2s_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16x2s_dhhhh edregA, eregC, eregB is group=7 & ins0611=0x15 & ins0000=1 & ins0101=1 & ins0404=1 & ins0505=1 ; edregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16z_rhi eregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=0 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16z_rhi eregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=0 ; eregA & eregC & eregB & imm1616=0 & imm1717=1 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16z_rhi eregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=0 ; eregA & eregC & eregB & imm1616=1 & imm1717=1 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mul8mv_dri edregA, eregC, eregB is group=7 & ins0611=0x16 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mul8uv_drr edregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=0 ; edregA & eregC & eregB & imm1616=0 & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mla8uv_ddrr edregA, edregC, eregB is group=7 & ins0611=0x16 & ins0000=0 ; edregA & edregC & eregB & imm1616=1 & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_qmul16s_rhi eregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=1 ; eregA & eregC & eregB & imm1616=0 & imm1717=0 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16s_rhi eregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=1 ; eregA & eregC & eregB & imm1616=0 & imm1717=1 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16s_rhi eregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=1 ; eregA & eregC & eregB & imm1616=1 & imm1717=1 & imm1919=0
+{
+    eregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mul8mv_drr edregA, eregC, eregB is group=7 & ins0611=0x16 & ins0000=1 ; edregA & eregC & eregB & imm1616=0 & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_mla8mv_ddrr edregA, edregC, eregB is group=7 & ins0611=0x16 & ins0000=1 ; edregA & edregC & eregB & imm1616=1 & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(edregC, eregB);
+}
+
+:simd_qmul16z_dhhi edregA, eregC, eregB is group=7 & ins0611=0x17 & ins0000=0 ; edregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16z_dhhi edregA, eregC, eregB is group=7 & ins0611=0x17 & ins0000=0 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16z_dhhi edregA, eregC, eregB is group=7 & ins0611=0x17 & ins0000=0 ; edregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmul16s_dhhi edregA, eregC, eregB is group=7 & ins0611=0x17 & ins0000=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=0
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmla16s_dhhi edregA, eregC, eregB is group=7 & ins0611=0x17 & ins0000=1 ; edregA & eregC & eregB & imm1818=0 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}
+
+:simd_qmls16s_dhhi edregA, eregC, eregB is group=7 & ins0611=0x17 & ins0000=1 ; edregA & eregC & eregB & imm1818=1 & imm1919=1
+{
+    edregA = SIMD_Op(eregC, eregB);
+}

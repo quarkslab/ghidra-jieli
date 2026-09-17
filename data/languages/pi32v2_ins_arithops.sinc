@@ -47,6 +47,17 @@
 }
 
 #
+# sp += imm13s
+# => add sp, #imm13s
+#
+:add "sp", #imm13s is group=7 & ins0012=0x08f0 ; imm1617=0 & imm2931=0 & imm1828s
+[ imm13s = imm1828s << 2; ]
+{
+	sp = sp + imm13s;
+}
+
+
+#
 # rA = rB + imm5
 # => add rA, rB, #imm5
 #
@@ -168,7 +179,7 @@
 #
 :muladd.s edregA, eregB, eregC is group=7 & ins0011=0x1fc ; edregA & eregB & eregC & imm1619=0 & imm2828=1
 {
-    # Zero-extend eregC and eregB
+    # Sign-extend eregC and eregB
     C:8 = sext(eregC);
     B:8 = sext(eregB); 
 
@@ -178,16 +189,16 @@
 
 #
 # rB_rA += rC * rD (unsigned)
-# => muladd.s rB_rA, rC, rD
+# => muladd.z rB_rA, rC, rD
 #
-:muladd.s edregA, eregB, eregC is group=7 & ins0011=0x1fc ; edregA & eregB & eregC & imm1619=0 & imm2828=0
+:muladd.z edregA, eregB, eregC is group=7 & ins0011=0x1fc ; edregA & eregB & eregC & imm1619=0 & imm2828=0
 {
     # Zero-extend eregC and eregB
     C:8 = zext(eregC);
     B:8 = zext(eregB); 
 
     # Multiply and add to edregA
-    edregA =edregA + C*B;
+    edregA = edregA + C*B;
 }
 
 
@@ -275,9 +286,9 @@
 
 #
 # rB_rA = rC * rD (signed)
-# => mul rB_rA, rC, rD
+# => mul.s rB_rA, rC, rD
 #
-:mul edregA, eregB, eregC is group=7 & ins0011=0x1f8 ; edregA & eregB & eregC & imm1619=0 & imm2828=0
+:mul.s edregA, eregB, eregC is group=7 & ins0011=0x1f8 ; edregA & eregB & eregC & imm1619=0 & imm2828=1
 {
     # Sign-extend eregC and eregB
     C:8 = sext(eregC);
@@ -290,9 +301,9 @@
 
 #
 # rB_rA = rC * rD (unsigned)
-# => mul rB_rA, rC, rD
+# => mul.z rB_rA, rC, rD
 #
-:mul.z edregA, eregB, eregC is group=7 & ins0011=0x1f8 ; edregA & eregB & eregC & imm1619=0 & imm2828=1
+:mul.z edregA, eregB, eregC is group=7 & ins0011=0x1f8 ; edregA & eregB & eregC & imm1619=0 & imm2828=0
 {
     # Zero-extend eregC and eregB
     C:8 = zext(eregC);
@@ -335,15 +346,31 @@
     eregA = eregB s/ eregC;
 }
 
+#
+# rB_rA = rD_rC / rE (unsigned)
+#
+:div edregA, edregB, eregC is group=7 & ins0011=0x1f6 ; edregA & edregB & eregC & imm1619=0 & imm2828=0
+{
+    edregA = edregB / zext(eregC);
+}
+
+#
+# rB_rA = rD_rC / rE (signed)
+#
+:div.s edregA, edregB, eregC is group=7 & ins0011=0x1f6 ; edregA & edregB & eregC & imm1619=0 & imm2828=1
+{
+    edregA = edregB s/ sext(eregC);
+}
+
 
 ###########################################################################################
-# Absolute value
+# Absolute value / Saturation
 ###########################################################################################
 
 #
 # rA = abs(rB)
 #
-:abs eregA, eregC is group=7 & ins0011=0x430 ; eregA & eregC & imm1623=0
+:abs eregA, eregC is group=7 & ins0011=0x430 ; eregA & eregC
 {
     if (eregC s>=0) goto <skip>;
     eregA = (eregC ^ 0xffffffff) + 1;
@@ -352,9 +379,120 @@
     eregA = eregC;
 }
 
+#
+# rA.l = sat8(rB.l) (u)
+#
+:sat8.u eregA, eregC is group=7 & ins0011=0x074 ; eregA & eregC & imm1623=0
+{
+    local src:4 = eregC & 0xffff;
+    if (src > 0xff) goto <clamp>;
+    eregA = src;
+    goto inst_next;
+<clamp>
+    eregA = 0xff;
+}
+
+#
+# rA.l = sat8(rB.l) (s)
+#
+:sat8.s eregA, eregC is group=7 & ins0011=0x074 ; eregA & eregC & imm1623=1
+{
+    local src:4 = sext(eregC[0,16]);
+    if (src s> 0x7f) goto <clamp_hi>;
+    if (src s< -0x80) goto <clamp_lo>;
+    eregA = src & 0xffff;
+    goto inst_next;
+<clamp_hi>
+    eregA = 0x7f;
+    goto inst_next;
+<clamp_lo>
+    eregA = 0xff80;
+}
+
+#
+# rA = sat8(rB) (u, 32-bit register)
+#
+:sat8.u eregA, eregC is group=7 & ins0011=0x07c ; eregA & eregC & imm1623=0
+{
+    local src:4 = eregC;
+    if (src > 0xff) goto <clamp>;
+    eregA = src;
+    goto inst_next;
+<clamp>
+    eregA = 0xff;
+}
+
+#
+# rA = sat8(rB) (s, 32-bit register)
+#
+:sat8.s eregA, eregC is group=7 & ins0011=0x07c ; eregA & eregC & imm1623=1
+{
+    local src:4 = eregC;
+    if (src s> 0x7f) goto <clamp_hi>;
+    if (src s< -0x80) goto <clamp_lo>;
+    eregA = src;
+    goto inst_next;
+<clamp_hi>
+    eregA = 0x7f;
+    goto inst_next;
+<clamp_lo>
+    eregA = -0x80;
+}
+
+#
+# rA = sat16(rB) (u)
+#
+:sat16.u eregA, eregC is group=7 & ins0011=0x078 ; eregA & eregC & imm1623=0
+{
+    if (eregC > 0xffff) goto <clamp>;
+    eregA = eregC;
+    goto inst_next;
+<clamp>
+    eregA = 0xffff;
+}
+
+#
+# rA = sat16(rB) (s)
+#
+:sat16.s eregA, eregC is group=7 & ins0011=0x078 ; eregA & eregC & imm1623=1
+{
+    if (eregC s> 0x7fff) goto <clamp_hi>;
+    if (eregC s< -0x8000) goto <clamp_lo>;
+    eregA = eregC;
+    goto inst_next;
+<clamp_hi>
+    eregA = 0x7fff;
+    goto inst_next;
+<clamp_lo>
+    eregA = -0x8000;
+}
+
+# Min / Max value
 ###########################################################################################
-# Min value
-###########################################################################################
+
+#
+# rA = umax(rB, rC) (unsigned)
+#
+:umax eregA, eregB, eregC is group=7 & ins0011=0x434 ; eregA & eregB & eregC & imm1619=0
+{
+    if (eregB >= eregC) goto <skip>;
+    eregA = eregC;
+    goto inst_next;
+<skip>
+    eregA = eregB;
+}
+
+#
+# rA = smax(rB, rC) (signed)
+#
+:smax eregA, eregB, eregC is group=7 & ins0011=0x434 ; eregA & eregB & eregC & imm1619=1
+{
+    if (eregB s>= eregC) goto <skip>;
+    eregA = eregC;
+    goto inst_next;
+<skip>
+    eregA = eregB;
+}
 
 #
 # rA = umin(rB, rC) (unsigned)
@@ -378,4 +516,49 @@
     goto inst_next;
 <skip>
     eregA = eregB;
+}
+
+###########################################################################################
+# Memory Arithmetic with packed immediate
+###########################################################################################
+
+#
+# [rA+offset] += packedimm12
+#
+:add [eregA+#offset], #packedimm12 is group=7 & ins0611=0x2E & imm0005s ; eregA & packedimm12
+[ offset = imm0005s<<2; ]
+{
+    addr:4 = eregA + offset;
+    *:4 addr = *:4 addr + packedimm12;
+}
+
+###########################################################################################
+# Reversal & DSP Arithmetic
+###########################################################################################
+
+#
+# rA = rev16(rC)  (reverse 16-bit halfwords)
+#
+:rev16 eregA, eregC is group=7 & ins0011=0x070 ; eregA & eregC & imm1623=0x40
+{
+    eregA = (eregC << 16) | (eregC >> 16);
+}
+
+#
+# rA = revs(rC.l)  (byte-swap low halfword and sign-extend)
+#
+:revs16 eregA, eregC is group=7 & ins0011=0x070 ; eregA & eregC & imm1623=0x80
+{
+    local b0:4 = eregC & 0xff;
+    local b1:4 = (eregC >> 8) & 0xff;
+    local swapped:4 = (b0 << 8) | b1;
+    eregA = sext(swapped[0,16]);
+}
+
+#
+# rA += rC (brev)  (bit-reversed carry add)
+#
+:addrev eregA, eregC is group=7 & ins0011=0x0b0 ; eregA & eregC & imm1623=0
+{
+    eregA = BitReverseAdd(eregA, eregC);
 }

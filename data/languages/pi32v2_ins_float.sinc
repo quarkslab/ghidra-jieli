@@ -1,0 +1,369 @@
+##################
+#
+# Floating Point Operations
+#
+##################
+
+#
+# rA = rB + rC (f)
+#
+:fadd eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=0
+{
+    eregA = eregB f+ eregC;
+}
+
+#
+# rA = rB - rC (f)
+#
+:fsub eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=1
+{
+    eregA = eregB f- eregC;
+}
+
+#
+# rA = rB * rC (f)
+#
+:fmul eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=2
+{
+    eregA = eregB f* eregC;
+}
+
+#
+# rA = rB / rC (f)
+#
+:fdiv eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=3
+{
+    eregA = eregB f/ eregC;
+}
+
+#
+# fcmp rB, rC
+#
+:fcmp eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregC & eregB & imm1619=4
+{
+    FloatCompare(eregB, eregC);
+}
+
+#
+# rA = fmin(rB, rC)
+#
+:fmin eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=5
+{
+    eregA = FloatMin(eregB, eregC);
+}
+
+#
+# rA = fmax(rB, rC)
+#
+:fmax eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=6
+{
+    eregA = FloatMax(eregB, eregC);
+}
+
+#
+# rA += rB * rC (f)
+#
+:fmadd eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=7
+{
+    eregA = eregA f+ (eregB f* eregC);
+}
+
+#
+# rA -= rB * rC (f)
+#
+:fmsub eregA, eregB, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & eregB & imm1619=8
+{
+    eregA = eregA f- (eregB f* eregC);
+}
+
+###########################################################################################
+# Floating Point Conversions
+###########################################################################################
+
+#
+# rA = ftoi(rC) (even)
+#
+:ftoi eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=0 & imm1619=0xf
+{
+    eregA = round(eregC);
+}
+
+#
+# rA = ftoi(rC) (trunc)
+#
+:ftoi eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=1 & imm1619=0xf
+{
+    eregA = trunc(eregC);
+}
+
+#
+# rA = ftoi(rC) (ceil)
+#
+:ftoi eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=2 & imm1619=0xf
+{
+    eregA = ceil(eregC);
+}
+
+#
+# rA = ftoi(rC) (floor)
+#
+:ftoi eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=3 & imm1619=0xf
+{
+    eregA = floor(eregC);
+}
+
+#
+# rA = ftou(rC) (even)
+#
+:ftou eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=4 & imm1619=0xf
+{
+    eregA = round(eregC);
+}
+
+#
+# rA = ftou(rC) (trunc)
+#
+:ftou eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=5 & imm1619=0xf
+{
+    eregA = trunc(eregC);
+}
+
+#
+# rA = ftou(rC) (ceil)
+#
+:ftou eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=6 & imm1619=0xf
+{
+    eregA = ceil(eregC);
+}
+
+#
+# rA = ftou(rC) (floor)
+#
+:ftou eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=7 & imm1619=0xf
+{
+    eregA = floor(eregC);
+}
+
+#
+# rA = itof(rC)
+#
+:itof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=8 & imm1619=0xf
+{
+    eregA = int2float(eregC);
+}
+
+#
+# rA = utof(rC)
+#
+:utof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=9 & imm1619=0xf
+{
+    eregA = int2float(eregC);
+}
+
+#
+# rA.l = ftof(rC)
+#
+:ftof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=10 & imm1619=0xf
+{
+    eregA = float2float(eregC);
+}
+
+#
+# rA = ftof(rC.l)
+#
+:ftof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=11 & imm1619=0xf
+{
+    eregA = float2float(eregC);
+}
+
+#
+# rA = ftof(rC) (even)
+#
+:ftof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=12 & imm1619=0xf
+{
+    eregA = round(eregC);
+}
+
+#
+# rA = ftof(rC) (trunc)
+#
+:ftof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=13 & imm1619=0xf
+{
+    eregA = trunc(eregC);
+}
+
+#
+# rA = ftof(rC) (ceil)
+#
+:ftof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=14 & imm1619=0xf
+{
+    eregA = ceil(eregC);
+}
+
+#
+# rA = ftof(rC) (floor)
+#
+:ftof eregA, eregC is group=7 & ins0411=0x53 & ins0203=3 & ins0003=0xf ; eregA & eregC & imm2023=15 & imm1619=0xf
+{
+    eregA = floor(eregC);
+}
+
+###########################################################################################
+# Double-Precision (64-bit) Floating Point Operations
+###########################################################################################
+
+#
+# rD = rD + rD (f, 64-bit)
+#
+:fadd edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=0
+{
+    edregA = edregB f+ edregC;
+}
+
+#
+# rD = rD - rD (f, 64-bit)
+#
+:fsub edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=1
+{
+    edregA = edregB f- edregC;
+}
+
+#
+# rD = rD * rD (f, 64-bit)
+#
+:fmul edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=2
+{
+    edregA = edregB f* edregC;
+}
+
+#
+# rD = rD / rD (f, 64-bit)
+#
+:fdiv edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=3
+{
+    edregA = edregB f/ edregC;
+}
+
+#
+# fcmp rD, rD (64-bit)
+#
+:fcmp edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregC & edregB & imm1619=4
+{
+    FloatCompare(edregB, edregC);
+}
+
+#
+# rD = fmin(rD, rD) (64-bit)
+#
+:fmin edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=5
+{
+    edregA = FloatMin(edregB, edregC);
+}
+
+#
+# rD = fmax(rD, rD) (64-bit)
+#
+:fmax edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=6
+{
+    edregA = FloatMax(edregB, edregC);
+}
+
+#
+# rD = fmla(rD, rD, rD) (64-bit)
+#
+:fmla edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=7
+{
+    edregA = edregA f+ (edregB f* edregC);
+}
+
+#
+# rD = fmls(rD, rD, rD) (64-bit)
+#
+:fmls edregA, edregB, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & edregB & imm1619=8
+{
+    edregA = edregA f- (edregB f* edregC);
+}
+
+#
+# Double conversions
+#
+:ftoi edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=0 & imm1619=0xf
+{
+    edregA = round(edregC);
+}
+
+:ftoi edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=1 & imm1619=0xf
+{
+    edregA = trunc(edregC);
+}
+
+:ftoi edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=2 & imm1619=0xf
+{
+    edregA = ceil(edregC);
+}
+
+:ftoi edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=3 & imm1619=0xf
+{
+    edregA = floor(edregC);
+}
+
+:ftou edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=4 & imm1619=0xf
+{
+    edregA = round(edregC);
+}
+
+:ftou edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=5 & imm1619=0xf
+{
+    edregA = trunc(edregC);
+}
+
+:ftou edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=6 & imm1619=0xf
+{
+    edregA = ceil(edregC);
+}
+
+:ftou edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=7 & imm1619=0xf
+{
+    edregA = floor(edregC);
+}
+
+:itof edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=8 & imm1619=0xf
+{
+    edregA = int2float(edregC);
+}
+
+:utof edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=9 & imm1619=0xf
+{
+    edregA = int2float(edregC);
+}
+
+# Float to double / double to float
+:ftof eregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; eregA & edregC & imm2023=10 & imm1619=0xf
+{
+    eregA = float2float(edregC);
+}
+
+:ftof edregA, eregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & eregC & imm2023=11 & imm1619=0xf
+{
+    edregA = float2float(eregC);
+}
+
+:ftof edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=12 & imm1619=0xf
+{
+    edregA = round(edregC);
+}
+
+:ftof edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=13 & imm1619=0xf
+{
+    edregA = trunc(edregC);
+}
+
+:ftof edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=14 & imm1619=0xf
+{
+    edregA = ceil(edregC);
+}
+
+:ftof edregA, edregC is group=7 & ins0411=0x53 & ins0003=0xe ; edregA & edregC & imm2023=15 & imm1619=0xf
+{
+    edregA = floor(edregC);
+}

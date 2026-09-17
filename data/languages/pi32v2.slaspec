@@ -23,6 +23,12 @@ define register offset=0x100 size=4
 	  sr8  sr9  sr10 icfg usp ssp sp pc
     ];
 
+#
+# Banked stack pointer registers (privilege-level switching)
+#
+define register offset=0x140 size=4
+    [ uspn sspn ];
+
 define register offset=0x0160 size=4
     [
         mult_addr 	  # Special internal register for dealing with multiple stores/loads
@@ -85,11 +91,20 @@ define token instr(16)
 	ins0712 = (7,12)
 	ins0812 = (8,12)
 	ins0912 = (9,12)
+	ins1012 = (10,12)
+	ins1212 = (12,12)
 
 	ins0307 = (3,7)
 	ins0407 = (4,7)
+	ins0404 = (4,4)
 	ins0607 = (6,7)
+	ins0606 = (6,6)
 	ins0707 = (7,7)
+	imm0505 = (5,5)
+	ins0505 = (5,5)
+	ins0202 = (2,2)
+	ins0101 = (1,1)
+	ins0000 = (0,0)
 
 	ins0004 = (0,4)
 	ins0304 = (3,4)
@@ -151,6 +166,7 @@ define token instr(16)
 	regAl = (0,2)
 	regAh = (0,2)
 	regBl = (4,6)
+	regCh = (7,9)
 
 	regCxle = (7,8)
 	regCxlo = (7,8)
@@ -183,16 +199,26 @@ define token instr2(16)
     imm1630 = (0,14)
 	imm1631 = (0,15)
     imm1631s = (0,15) signed
+    imm1717 = (1,1)
+    imm1818 = (2,2)
+    imm1919 = (3,3)
     imm1719 = (1,3)
     imm1727 = (1,11)
+    imm1827 = (2,11)
+    imm1828s = (2,12) signed
     imm1819 = (2,3)
     imm1822 = (2,6)
     imm1823 = (2,7)
+    imm1823s = (2,7) signed
+    imm2023 = (4,7)
+    imm2020 = (4,4)
+    imm2223 = (6,7)
     imm2325 = (7, 9)
     imm2327 = (7,11)
     imm2425 = (8, 9)
     imm2627 = (10,11)
     imm2427 = (8,11)
+    imm2227 = (6,11)
 
     imm1731 = (1,15)
     imm1831 = (2,15)
@@ -219,6 +245,8 @@ define token instr2(16)
 	eregC = (8,11)
     esregC = (8, 11)
 	eregB = (4,7)
+    eregD = (0,3)
+    eregD2 = (0,3)
 
     edregA = (13,15)
     edregC = (9,11)
@@ -241,7 +269,7 @@ define token instr3(16)
 attach variables [ regAl regBl eregAl ]
 	[ r0 r1 r2 r3 r4 r5 r6 r7 ];
 
-attach variables [ regAh ]
+attach variables [ regAh regCh ]
 	[ r8 r9 r10 r11 r12 r13 r14 r15 ];
 
 attach variables [ regA regB ]
@@ -254,7 +282,7 @@ attach variables [ sregA esregC ]
 attach variables [ dregA dregB edregA edregB edregC ]
 	[ r0_r1 r2_r3 r4_r5 r6_r7 r8_r9 r10_r11 r12_r13 r14_r15 ];
 
-attach variables [ eregA eregB eregC]
+attach variables [ eregA eregB eregC eregD eregD2 ]
 	[ r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12 r13 r14 r15 ];
 
 attach variables [ regCxle ]
@@ -398,6 +426,14 @@ jaddr32: res is imm1631 ; imm3247s
     [ res = ((imm3247s << 16) | imm1631) + inst_next; ]
     { export *:4 res;}
 
+jaddr32_call: res is imm1616=0 & imm1631 ; imm3247s
+    [ res = ((imm3247s << 16) | imm1631) + inst_next; ]
+    { export *:4 res;}
+
+jaddr32_gotoss: res is imm1616=1 & imm1631 ; imm3247s
+    [ res = ((imm3247s << 16) | imm1631) + inst_next; ]
+    { export *:4 res;}
+
 ######################################################
 # Parallel execution
 #
@@ -431,7 +467,6 @@ parainst:^instruction is parallel_phase=0 & prefix=6 & instruction
     group=0; globalset(inst_next, group);
 ]
 {
-    delayslot(1);
     build instruction;
 }
 
@@ -445,7 +480,6 @@ parainst:^instruction is parallel_phase=0 & prefix=7 & ins1112=0b10 & instructio
     group=7; globalset(inst_next, group);
 ]
 {
-    delayslot(1);
     build instruction;
 }
 
@@ -507,13 +541,19 @@ elseinst:^parainst is parainst
 }
 
 # Processing `then` instructions while we have more than 1 inst.
-cdtinst:^theninst is thenbranch>1 & theninst {}
+cdtinst:^theninst is thenbranch>1 & theninst
+{
+    build theninst;
+}
 
 # Last instruction in the `then` branch, set `closebracket` to
 # force the next instruction to include a closing bracket (cap'n obvious).
 # We don't close the if block as we have some instructions in the else branch.
 cdtinst:^theninst is thenbranch=1 & theninst & elsebranch>0
-    [ closebracket=1; globalset(inst_next, closebracket); ]{}
+    [ closebracket=1; globalset(inst_next, closebracket); ]
+{
+    build theninst;
+}
 
 # Last instruction in the `then` branch, set `closebracket` to
 # force the next instruction to include a closing bracket (cap'n obvious).
@@ -522,7 +562,10 @@ cdtinst:^theninst is thenbranch=1 & theninst & elsebranch=0
     [
         closebracket=1; globalset(inst_next, closebracket);
         ifblock=0; globalset(inst_next, ifblock);
-    ]{}
+    ]
+{
+    build theninst;
+}
 
 ## We are out of the `then` branch and we don't have any `else`
 ## branch, let's insert a bracket and get back to normal by
@@ -536,17 +579,26 @@ cdtinst:^theninst is thenbranch=1 & theninst & elsebranch=0
 # Otherwise, we are done with our `then` branch and switch to our
 # `else` branch.
 cdtinst:^"} else { " elseinst is thenbranch=0 & elsebranch>1 & elseinst & closebracket=1
-    [ closebracket=0; globalset(inst_next, closebracket); ]{}
+    [ closebracket=0; globalset(inst_next, closebracket); ]
+{
+    build elseinst;
+}
 
 # Special case: else branch only has a single instruction (keep closebracket to 1)
 cdtinst:^"} else { " elseinst is thenbranch=0 & elsebranch=1 & elseinst & closebracket=1
     [
         ifblock=0; globalset(inst_next, ifblock);
         closebracket=1; globalset(inst_next, closebracket);
-    ]{}
+    ]
+{
+    build elseinst;
+}
 
 # Other instructions in else branch
-cdtinst:^elseinst is thenbranch=0 & elsebranch>1 & closebracket=0 & elseinst {}
+cdtinst:^elseinst is thenbranch=0 & elsebranch>1 & closebracket=0 & elseinst
+{
+    build elseinst;
+}
 
 # Last instruction of our `else` branch forces a close bracket for the next one
 # We also consider our if structure closed.
@@ -554,18 +606,30 @@ cdtinst:^elseinst is thenbranch=0 & elsebranch=1 & elseinst & closebracket=0
     [
         closebracket=1; globalset(inst_next, closebracket);
         ifblock=0; globalset(inst_next, ifblock);
-    ]{}
+    ]
+{
+    build elseinst;
+}
 
 # Conditional instruction
-:^cdtinst is phase=0 & ifblock=1 & cdtinst [phase=1;]{}
+:^cdtinst is phase=0 & ifblock=1 & cdtinst [phase=1;]
+{
+    build cdtinst;
+}
 
 # Default case, we are not processing a conditional instruction.
-:^parainst is parainst & phase=0 & ifblock=0 & closebracket=0 [phase=1;]{}
+:^parainst is parainst & phase=0 & ifblock=0 & closebracket=0 [phase=1;]
+{
+    build parainst;
+}
 
 # Special case, we need to add a final bracket to an if block
 # but this instruction does not belong to the if..then..else structure.
 :^"} " parainst is parainst & phase=0 & ifblock=0 & closebracket=1
-[ phase=1; closebracket=0; globalset(inst_next, closebracket); ]{}
+[ phase=1; closebracket=0; globalset(inst_next, closebracket); ]
+{
+    build parainst;
+}
 
 
 #############################################################################
@@ -591,11 +655,37 @@ define pcodeop InstructionCacheFlush;
 define pcodeop DataCacheFlush;
 define pcodeop DataCacheLineInvalidate;
 define pcodeop Trigger;
+define pcodeop SendEventGlobal;
+define pcodeop WaitForEvent;
+define pcodeop ReturnToSupervisor;
+define pcodeop ReturnToNormal;
 
 define pcodeop IfElseBlock;
 define pcodeop RepeatBlock;
 
 define pcodeop TODO;
+
+define pcodeop FloatCompare;
+define pcodeop FloatMin;
+define pcodeop FloatMax;
+define pcodeop BitReverseAdd;
+define pcodeop CoprocessorExecute;
+define pcodeop ShiftAndRound;
+define pcodeop CircularShift;
+define pcodeop SIMD_Align;
+define pcodeop SIMD_Pack;
+define pcodeop SIMD_PackB;
+define pcodeop SIMD_Unpack;
+define pcodeop SIMD_VSat;
+define pcodeop SIMD_Mts;
+define pcodeop SIMD_Add;
+define pcodeop SIMD_Sub;
+define pcodeop SIMD_Mul;
+define pcodeop SIMD_Mac;
+define pcodeop SIMD_Shift;
+define pcodeop SIMD_MinMax;
+define pcodeop SIMD_Compare;
+define pcodeop SIMD_Op;
 
 # Categorized
 @include "pi32v2_ins_progflow.sinc"
@@ -603,12 +693,16 @@ define pcodeop TODO;
 @include "pi32v2_ins_move.sinc"
 @include "pi32v2_ins_arithops.sinc"
 @include "pi32v2_ins_para_arithops.sinc"
+@include "pi32v2_ins_mac.sinc"
+@include "pi32v2_ins_simd.sinc"
 @include "pi32v2_ins_logicops.sinc"
 @include "pi32v2_ins_shiftrot.sinc"
 @include "pi32v2_ins_bitops.sinc"
 @include "pi32v2_ins_loadimm.sinc"
 @include "pi32v2_ins_loadstore.sinc"
 @include "pi32v2_ins_ifthenelse.sinc"
+@include "pi32v2_ins_float.sinc"
+@include "pi32v2_ins_extra.sinc"
 
 ##########################################################################################
 # Uncategorized #
@@ -663,17 +757,18 @@ define pcodeop TODO;
 }
 
 #
+#
 # ssync
 #
-:ssync is group=0 & ins0012=0x0022
+:ssync is group=0 & ins0512=1 & ins0003=2
 {
 	SystemSynchronize();
 }
 
 #
-# btbclr
+# btbclr (encodes as 0x0023 and 0x0027)
 #
-:btbclr is group=0 & ins0012=0x0023
+:btbclr is group=0 & ins0512=1 & ins0003=3
 {
 	BTBClear();
 }
@@ -692,6 +787,29 @@ define pcodeop TODO;
 :lockset is group=0 & ins0012=0x0041
 {
 	SetLock();
+}
+
+#
+# sevl
+#
+:sevl is group=0 & ins0012=0x0042
+{
+}
+
+#
+# sevg - Send Event Global (multi-core event signaling)
+#
+:sevg is group=0 & ins0012=0x0043
+{
+	SendEventGlobal();
+}
+
+#
+# wfe - Wait For Event
+#
+:wfe is group=0 & ins0012=0x0044
+{
+	WaitForEvent();
 }
 
 #

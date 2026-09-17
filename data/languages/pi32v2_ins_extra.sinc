@@ -1,0 +1,347 @@
+#############################################################################
+# PI32V2 Extra Instructions: System, Got, Move, Shift/Round, Stack & Branches
+#############################################################################
+
+# COPEXw_ddi: edregA = copex(edregC) (imm)
+:copex edregA, edregC, imm1623 is group=7 & ins0011=0x1ff ; edregA & imm2828=0 & edregC & imm1623
+{
+    local imm:4 = imm1623;
+    edregA = CoprocessorExecute(edregC, imm);
+}
+
+# LDGOTw_rr: eregA = [npc + eregC]
+:eregA = ["npc" + eregC] is group=7 & ins0012=0x860 ; eregA & eregC & imm1623=0
+{
+    eregA = *:4 (inst_next + eregC);
+}
+
+# LDGOTx_ri: regA = [npc + imm32]
+:regA = ["npc" + imm32] is group=7 & ins0412=0x1fa & regA ; imm1616=0 & imm1631 ; imm3247
+[ imm32 = imm1631 | (imm3247 << 16); ]
+{
+    local off:4 = imm32;
+    regA = *:4 (inst_next + off);
+}
+
+# MOVEZw_bi: eregA.b0 = imm8
+:mov eregA[0,8], imm1623 is group=7 & ins0011=0x20 ; eregA & imm2425=0 & imm1623
+{
+    eregA = (eregA & 0xffffff00) | imm1623;
+}
+
+# MOVEw_hh: Halfword register moves
+:mov eregA[0,16], eregC[0,16] is group=7 & ins0011=0x68 ; eregA & eregC & imm2223=0 & imm1621=0
+{
+    eregA = (eregA & 0xffff0000) | (eregC & 0x0000ffff);
+}
+
+:mov eregA[0,16], eregC[16,16] is group=7 & ins0011=0x68 ; eregA & eregC & imm2223=1 & imm1621=0
+{
+    eregA = (eregA & 0xffff0000) | (eregC >> 16);
+}
+
+:mov eregA[16,16], eregC[0,16] is group=7 & ins0011=0x68 ; eregA & eregC & imm2223=2 & imm1621=0
+{
+    eregA = (eregA & 0x0000ffff) | ((eregC & 0x0000ffff) << 16);
+}
+
+:mov eregA[16,16], eregC[16,16] is group=7 & ins0011=0x68 ; eregA & eregC & imm2223=3 & imm1621=0
+{
+    eregA = (eregA & 0x0000ffff) | (eregC & 0xffff0000);
+}
+
+# CSHFw_rrr & CSHFSw_rrr
+:cshf eregA, eregB, eregC is group=7 & ins0011=0x1cc ; eregA & eregC & eregB & imm1619=2
+{
+    eregA = CircularShift(eregB, eregC);
+}
+
+:cshfs eregA, eregB, eregC is group=7 & ins0011=0x1cc ; eregA & eregC & eregB & imm1619=3
+{
+    eregA = CircularShift(eregB, eregC);
+}
+
+# CSHFw_dr & CSHFSw_dr
+:cshf edregA, eregC is group=7 & ins0011=0x1dc ; edregA & imm2828=0 & eregC & imm2023=0 & imm1619=2
+{
+    edregA = CircularShift(edregA, eregC);
+}
+
+:cshfs edregA, eregC is group=7 & ins0011=0x1dc ; edregA & imm2828=0 & eregC & imm2023=0 & imm1619=3
+{
+    edregA = CircularShift(edregA, eregC);
+}
+
+:shfdr.upz eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=0 & imm2020=0 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.evenz eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=0 & imm2020=1 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.roundz eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=1 & imm2020=0 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.zeroz eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=1 & imm2020=1 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.ups eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=2 & imm2020=0 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.evens eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=2 & imm2020=1 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.rounds eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=3 & imm2020=0 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.zeros eregA, edregB, imm1621 is group=7 & ins0011=0x1d2 ; eregA & imm2627=3 & imm2020=1 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr_0 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=0
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_1 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=1
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_2 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=2
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_3 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=3
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_4 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=4
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_5 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=5
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_6 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=6
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr_7 eregA, edregB, eregC is group=7 & ins0011=0x1d3 ; eregA & edregB & eregC & imm1620=7
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr.z eregA, edregB, imm1621 is group=7 & ins0011=0x1de ; eregA & imm2627=0 & imm2020=0 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.s eregA, edregB, imm1621 is group=7 & ins0011=0x1de ; eregA & imm2627=2 & imm2020=0 & edregB & imm1621
+{
+    local imm:4 = imm1621;
+    eregA = ShiftAndRound(edregB, imm);
+}
+
+:shfdr.z eregA, edregB, eregC is group=7 & ins0011=0x1df ; eregA & edregB & eregC & imm1620=0
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+:shfdr.s eregA, edregB, eregC is group=7 & ins0011=0x1df ; eregA & edregB & eregC & imm1620=1
+{
+    eregA = ShiftAndRound(edregB, eregC);
+}
+
+# POPw_retsregs: {rets, regs...} = [sp++]
+:pop {rets, popmap} is group=7 & ins0011=0x8d1 & rets ; popmap
+{
+    mult_addr = sp;
+    build popmap;
+    popreg(rets);
+    sp = mult_addr;
+}
+
+# PUSH_CLRw_regs: [--sp] = {regs} (c)
+:push.c {pshmap} is group=7 & ins0011=0x8dc ; pshmap
+{
+    mult_addr = sp;
+    build pshmap;
+    sp = mult_addr;
+}
+
+# PUSH_CLRw_retsregs: [--sp] = {rets, regs} (c)
+:push.c {rets, pshmap} is group=7 & ins0011=0x8dd & rets ; pshmap
+{
+    mult_addr = sp;
+    pushreg(rets);
+    build pshmap;
+    sp = mult_addr;
+}
+
+# PUSHS_CLRw_sregs: [--sp] = {sregs} (c)
+:push.c {pshsrmap} is group=7 & ins0011=0x95c ; pshsrmap
+{
+    mult_addr = sp;
+    build pshsrmap;
+    sp = mult_addr;
+}
+
+# SHHw_rrr: h[rB+rC] = rA.h
+:sh.h eregA, [eregB + eregC] is group=7 & ins0011=0xdd8 ; eregA & eregB & eregC & imm1619=3
+{
+    local addr:4 = eregB + eregC;
+    local val:4 = eregA >> 16;
+    *:2 addr = val:2;
+}
+
+# SHHw_rri: h[rB+imm9] = rA.h
+:sh.h eregA, [eregB + imm9s] is group=7 & ins0411=0xd5 & ins0203=1 & imm0001s ; eregA & imm2427 & eregB & imm1719 & imm1616=1
+[ imm9s = (imm0001s << 8) | (imm2427 << 4) | (imm1719 << 1); ]
+{
+    local addr:4 = eregB + imm9s;
+    local val:4 = eregA >> 16;
+    *:2 addr = val:2;
+}
+
+# SHHIAw_rrr: h[rB++=rC] = rA.h
+:sh.h eregC, [eregA++=eregB] is group=7 & ins0011=0xdde ; eregA & eregB & eregC & imm1619=3
+{
+    local val:4 = eregC >> 16;
+    *:2 eregA = val:2;
+    eregA = eregA + eregB;
+}
+
+# SHHIAw_rri: h[rB++=imm9] = rA.h
+:sh.h eregA, [eregB++=imm9] is group=7 & ins0411=0xdd & ins0203=1 & imm0001s ; eregA & eregB & imm1616=1 & imm1719 & imm2427
+[ imm9 = (imm0001s << 8) | (imm2427 << 4) | (imm1719 << 1); ]
+{
+    local val:4 = eregA >> 16;
+    *:2 eregB = val:2;
+    eregB = eregB + imm9;
+}
+
+# SHHIBw_rrr: h[++rB=rC] = rA.h
+:sh.h eregC, [++eregA=eregB] is group=7 & ins0011=0xddc ; eregA & eregB & eregC & imm1619=3
+{
+    eregA = eregA + eregB;
+    local val:4 = eregC >> 16;
+    *:2 eregA = val:2;
+}
+
+# LBSIBw_rri: rA = b[++rB=imm9] (s)
+:lb.s eregA, [++eregB=imm9] is group=7 & ins0411=0xe5 & ins0203=3 & ins0101=0 & imm0000 ; eregA & imm2427 & eregB & imm1719 & imm1616=0
+[ imm9 = (imm0000 << 8) | (imm2427 << 4) | (imm1719 << 1); ]
+{
+    eregB = eregB + imm9;
+    eregA = sext(*:1 eregB);
+}
+
+# FITBLKw_ddii: iff (edregA == edregC) {
+:iff (edregA == edregC) { is group=7 & ins0411=0x81 & ins0003=0 ; edregA & imm2828=0 & edregC & imm2223=3 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (edregA != edregC) goto <else>;
+    cres=1;
+    goto <end>;
+<else>
+    cres=0;
+<end>
+}
+
+# FITBLKw_ddii: iff (edregA != edregC) {
+:iff (edregA != edregC) { is group=7 & ins0411=0xa1 & ins0003=0 ; edregA & imm2828=0 & edregC & imm2223=3 & ifcnt & elsecnt
+[
+    thenbranch=ifcnt+1; globalset(inst_next, thenbranch);
+    elsebranch=elsecnt; globalset(inst_next, elsebranch);
+    ifblock=1; globalset(inst_next, ifblock);
+]
+{
+    if (edregA == edregC) goto <else>;
+    cres=1;
+    goto <end>;
+<else>
+    cres=0;
+<end>
+}
+
+:ifcs jaddr16 is group=7 & ins0012=0x0940 ; jaddr16
+{
+    if ($(C) == 1)
+        goto jaddr16;
+}
+
+:ifcc jaddr16 is group=7 & ins0012=0x09c0 ; jaddr16
+{
+    if ($(C) == 0)
+        goto jaddr16;
+}
+
+:ifhi jaddr16 is group=7 & ins0012=0x0c40 ; jaddr16
+{
+    if (($(C) == 0) && ($(Z) == 0))
+        goto jaddr16;
+}
+
+:ifls jaddr16 is group=7 & ins0012=0x0cc0 ; jaddr16
+{
+    if (($(C) == 1) || ($(Z) == 1))
+        goto jaddr16;
+}
+
+:ifge jaddr16 is group=7 & ins0012=0x0d40 ; jaddr16
+{
+    if ($(N) == $(V))
+        goto jaddr16;
+}
+
+:iflt jaddr16 is group=7 & ins0012=0x0dc0 ; jaddr16
+{
+    if ($(N) != $(V))
+        goto jaddr16;
+}
+
+:ifgt jaddr16 is group=7 & ins0012=0x0e40 ; jaddr16
+{
+    if (($(Z) == 0) && ($(N) == $(V)))
+        goto jaddr16;
+}
+
+:ifle jaddr16 is group=7 & ins0012=0x0ec0 ; jaddr16
+{
+    if (($(Z) == 1) || ($(N) != $(V)))
+        goto jaddr16;
+}

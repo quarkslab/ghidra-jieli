@@ -42,6 +42,39 @@
 	return [rete];
 }
 
+#
+# rthw
+#
+:rthw is group=0 & ins0012=0x0086
+{
+	return [rets];
+}
+
+#
+# rtss - Return To Supervisor State
+#
+:rtss is group=0 & ins0012=0x0084
+{
+	ReturnToSupervisor();
+	return [rets];
+}
+
+#
+# rtns - Return To Normal State (user mode)
+#
+:rtns is group=0 & ins0012=0x0085
+{
+	ReturnToNormal();
+	return [rets];
+}
+
+#
+# trigger
+#
+:trigger is group=7 & ins0012=0x0870 ; imm1631=0
+{
+}
+
 ###########################################################################################
 # Call
 ###########################################################################################
@@ -55,6 +88,14 @@
     rets = inst_next;
 
     # Jump to pc
+    call [regA];
+}
+
+#
+# callns rA
+#
+:callns regA is group=0 & ins0412=0x009 & regA
+{
     call [regA];
 }
 
@@ -83,12 +124,20 @@
 #
 # call reladdr32
 #
-:call jaddr32 is group=7 & ins0012=0x1f80 ; jaddr32
+:call jaddr32_call is group=7 & ins0012=0x1f80 ; jaddr32_call
 {
     # Set return address register
     rets = inst_next;
 
-    call jaddr32;
+    call jaddr32_call;
+}
+
+#
+# gotoss reladdr32
+#
+:gotoss jaddr32_gotoss is group=7 & ins0012=0x1f80 ; jaddr32_gotoss
+{
+    goto jaddr32_gotoss;
 }
 
 ###########################################################################################
@@ -299,6 +348,24 @@
         goto jaddr9e;
 }
 
+#
+# ifeq goto reladdr16
+#
+:ifeq jaddr16 is group=7 & ins0012=0x0840 ; jaddr16
+{
+    if (cres == 0)
+        goto jaddr16;
+}
+
+#
+# ifne goto reladdr16
+#
+:ifne jaddr16 is group=7 & ins0012=0x08c0 ; jaddr16
+{
+    if (cres != 0)
+        goto jaddr16;
+}
+
 ##
 # Unsigned conditional jumps (reg/reg/imm10)
 ##
@@ -470,17 +537,244 @@
         goto jaddr16e;
 }
 
+##
+# 48-bit Floating-Point Conditional Jumps (Single & Double Precision)
+##
+
+# Single precision (eregA, eregB)
+:iff eregA "==" eregB, jaddr16e is group=7 & ins0012=0x1f40 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f== eregB)
+        goto jaddr16e;
+}
+
+:iff eregA "!=" eregB, jaddr16e is group=7 & ins0012=0x1f44 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f!= eregB)
+        goto jaddr16e;
+}
+
+:iff eregA "<" eregB, jaddr16e is group=7 & ins0012=0x1f43 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f< eregB)
+        goto jaddr16e;
+}
+
+:iff eregA "<=" eregB, jaddr16e is group=7 & ins0012=0x1f49 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f<= eregB)
+        goto jaddr16e;
+}
+
+:iff eregA ">" eregB, jaddr16e is group=7 & ins0012=0x1f4c ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f> eregB)
+        goto jaddr16e;
+}
+
+:iff eregA ">=" eregB, jaddr16e is group=7 & ins0012=0x1f4a ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f>= eregB)
+        goto jaddr16e;
+}
+
+# Double precision (edregA, edregB)
+:iff edregA "==" edregB, jaddr16e is group=7 & ins0012=0x1f40 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f== edregB)
+        goto jaddr16e;
+}
+
+:iff edregA "!=" edregB, jaddr16e is group=7 & ins0012=0x1f44 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f!= edregB)
+        goto jaddr16e;
+}
+
+:iff edregA "<" edregB, jaddr16e is group=7 & ins0012=0x1f43 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f< edregB)
+        goto jaddr16e;
+}
+
+:iff edregA "<=" edregB, jaddr16e is group=7 & ins0012=0x1f49 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f<= edregB)
+        goto jaddr16e;
+}
+
+:iff edregA ">" edregB, jaddr16e is group=7 & ins0012=0x1f4c ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f> edregB)
+        goto jaddr16e;
+}
+
+:iff edregA ">=" edregB, jaddr16e is group=7 & ins0012=0x1f4a ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f>= edregB)
+        goto jaddr16e;
+}
+
+# Single precision unordered/ordered comparisons (eregA, eregB)
+
+:iff eregA "u!=" eregB, jaddr16e is group=7 & ins0012=0x1f41 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f== eregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff eregA "u>=" eregB, jaddr16e is group=7 & ins0012=0x1f42 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f< eregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff eregA "u==" eregB, jaddr16e is group=7 & ins0012=0x1f45 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f!= eregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff eregA "uno" eregB, jaddr16e is group=7 & ins0012=0x1f46 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (nan(eregA))
+        goto jaddr16e;
+    if (nan(eregB))
+        goto jaddr16e;
+}
+
+:iff eregA "ord" eregB, jaddr16e is group=7 & ins0012=0x1f47 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (nan(eregA))
+        goto inst_next;
+    if (nan(eregB))
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff eregA "u>" eregB, jaddr16e is group=7 & ins0012=0x1f48 ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f<= eregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff eregA "u<" eregB, jaddr16e is group=7 & ins0012=0x1f4b ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f>= eregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff eregA "u<=" eregB, jaddr16e is group=7 & ins0012=0x1f4d ; eregA & eregB & imm1623=0x80 ; jaddr16e
+{
+    if (eregA f> eregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+# Double precision unordered/ordered comparisons (edregA, edregB)
+
+:iff edregA "u!=" edregB, jaddr16e is group=7 & ins0012=0x1f41 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f== edregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff edregA "u>=" edregB, jaddr16e is group=7 & ins0012=0x1f42 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f< edregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff edregA "u==" edregB, jaddr16e is group=7 & ins0012=0x1f45 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f!= edregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff edregA "uno" edregB, jaddr16e is group=7 & ins0012=0x1f46 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (nan(edregA))
+        goto jaddr16e;
+    if (nan(edregB))
+        goto jaddr16e;
+}
+
+:iff edregA "ord" edregB, jaddr16e is group=7 & ins0012=0x1f47 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (nan(edregA))
+        goto inst_next;
+    if (nan(edregB))
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff edregA "u>" edregB, jaddr16e is group=7 & ins0012=0x1f48 ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f<= edregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff edregA "u<" edregB, jaddr16e is group=7 & ins0012=0x1f4b ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f>= edregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
+:iff edregA "u<=" edregB, jaddr16e is group=7 & ins0012=0x1f4d ; edregA & edregB & imm1623=0xc0 ; jaddr16e
+{
+    if (edregA f> edregB)
+        goto inst_next;
+    goto jaddr16e;
+}
+
 
 ##
 # Signed conditional jumps (register/imm12/pcrel16sm2)
 ##
 
 #
-# ifs (rA < imm12) goto pcrel16sm2
+# ifs (rA >= #imm12) goto pcrel16sm2
 #
-:jb eregA, #imm1627, jaddr16e is group=7 & ins0012=0x1f0b ; eregA & imm1627 ; jaddr16e
+:jge eregA, #imm1627s, jaddr16e is group=7 & ins0012=0x1f0a ; eregA & imm1627s ; jaddr16e
 {
-    if (eregA s< imm1627)
+    if (eregA s>= imm1627s)
+        goto jaddr16e;
+}
+
+#
+# ifs (rA < #imm12) goto pcrel16sm2
+#
+:jl eregA, #imm1627s, jaddr16e is group=7 & ins0012=0x1f0b ; eregA & imm1627s ; jaddr16e
+{
+    if (eregA s< imm1627s)
+        goto jaddr16e;
+}
+
+#
+# ifs (rA > #imm12) goto pcrel16sm2
+#
+:jg eregA, #imm1627s, jaddr16e is group=7 & ins0012=0x1f0c ; eregA & imm1627s ; jaddr16e
+{
+    if (eregA s> imm1627s)
+        goto jaddr16e;
+}
+
+#
+# ifs (rA <= #imm12) goto pcrel16sm2
+#
+:jle eregA, #imm1627s, jaddr16e is group=7 & ins0012=0x1f0d ; eregA & imm1627s ; jaddr16e
+{
+    if (eregA s<= imm1627s)
         goto jaddr16e;
 }
 
@@ -699,29 +993,38 @@
 ##
 
 #
+# ifs (rA >= #packedimm32) goto pcrel16sm2
+#
+:jge eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f2a ; eregA & packedimm12 ; jaddr16e
+{
+    if (eregA s>= packedimm12)
+        goto jaddr16e;
+}
+
+#
 # ifs (rA < #packedimm32) goto pcrel16sm2
 #
-:jb eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f2b ; eregA & packedimm12 ; jaddr16e
+:jl eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f2b ; eregA & packedimm12 ; jaddr16e
 {
     if (eregA s< packedimm12)
         goto jaddr16e;
 }
 
 #
-# ifs (rA <= #packedimm32) goto pcrel16sm2
+# ifs (rA > #packedimm32) goto pcrel16sm2
 #
-:jbe eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f0d ; eregA & packedimm12 ; jaddr16e
+:jg eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f2c ; eregA & packedimm12 ; jaddr16e
 {
-    if (eregA s<= packedimm12)
+    if (eregA s> packedimm12)
         goto jaddr16e;
 }
 
 #
-# ifs (rA >= #packedimm32) goto pcrel16sm2
+# ifs (rA <= #packedimm32) goto pcrel16sm2
 #
-:jae eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f2a ; eregA & packedimm12 ; jaddr16e
+:jle eregA, #packedimm12, jaddr16e is group=7 & ins0012=0x1f2d ; eregA & packedimm12 ; jaddr16e
 {
-    if (eregA s>= packedimm12)
+    if (eregA s<= packedimm12)
         goto jaddr16e;
 }
 
@@ -735,10 +1038,7 @@
 :rep nwords, regA is group=0 & ins0812=0x03 & regA & imm0407
 [ nwords = (imm0407 << 1) + 2; ]
 {
-    # Skip instructions if counter is zero
-    if (regA == 0) goto inst_next;
-        regA = regA - 1;
-    delayslot(nwords);
+    RepeatBlock(nwords:4, regA);
 }
 
 #

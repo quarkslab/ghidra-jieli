@@ -18,22 +18,6 @@
 }
 
 #
-# [rA + imm8] |= (1 << rB)
-# => bitset [rA + imm8], rB
-#
-:bitset "["eregA + imm8"]", eregC is group=7 & ins0011=0x866 ; eregA & eregC & imm1617=0 & imm1623
-[imm8 = (imm1623 & 0xFC);]
-{
-    local addr:4 = eregA + imm8;
-    *:4 addr = addr | (1 << eregC);
-}
-
-
-###########################################################################################
-# Toggle bit
-###########################################################################################
-
-#
 # rA ^= (1<<shamt)
 # => bittgl rA, shamt
 #
@@ -41,10 +25,6 @@
 {
 	regAl = regAl ^ (1 << imm0812);
 }
-
-###########################################################################################
-# Clear bit
-###########################################################################################
 
 #
 # rA &= ~(1<<shamt)
@@ -57,18 +37,39 @@
 
 #
 # [rA + imm8] |= (1 << rB)
-# => bitclr [rA + imm8], rB
+# => bitset [rA + imm8], rB
 #
+:bitset "["eregA + imm8"]", eregC is group=7 & ins0011=0x866 ; eregA & eregC & imm1617=0 & imm1623
+[imm8 = (imm1623 & 0xFC);]
+{
+    local addr:4 = eregA + imm8;
+    *:4 addr = *:4 addr | (1 << eregC);
+}
+
+:bittgl "["eregA + imm8"]", eregC is group=7 & ins0011=0x866 ; eregA & eregC & imm1617=1 & imm1623
+[imm8 = (imm1623 & 0xFC);]
+{
+    local addr:4 = eregA + imm8;
+    *:4 addr = *:4 addr ^ (1 << eregC);
+}
+
+:bitand "["eregA + imm8"]", eregC is group=7 & ins0011=0x866 ; eregA & eregC & imm1617=2 & imm1623
+[imm8 = (imm1623 & 0xFC);]
+{
+    local addr:4 = eregA + imm8;
+    *:4 addr = *:4 addr & (1 << eregC);
+}
+
 :bitclr "["eregA + imm8"]", eregC is group=7 & ins0011=0x866 ; eregA & eregC & imm1617=3 & imm1623
 [imm8 = (imm1623 & 0xFC);]
 {
     local addr:4 = eregA + imm8;
-    *:4 addr = addr & ~(1 << eregC);
+    *:4 addr = *:4 addr & ~(1 << eregC);
 }
 
 
 #################################
-# Bit count
+# Bit count & Zero Compare
 #################################
 
 #
@@ -80,9 +81,75 @@
 }
 
 #
-# rA = zcmp(rB)
+# rA = cls(rB)  (count leading signs)
 #
-#:zcmp eregA, eregC is group=7 & ins0411=0x180 ; eregA & eregC & imm1623=2
-#{
-#    # ?
-#}
+:cls eregA, eregC is group=7 & ins0011=0x180 ; eregA & eregC & imm1623=1
+{
+    if (eregC s< 0) goto <neg>;
+    eregA = lzcount(eregC) - 1;
+    goto <done>;
+<neg>
+    local tmp:4 = ~eregC;
+    eregA = lzcount(tmp) - 1;
+<done>
+}
+
+#
+# rA = zcmp(rB)  (zero compare)
+#
+:zcmp eregA, eregC is group=7 & ins0011=0x180 ; eregA & eregC & imm1623=2
+{
+    eregA = zext(eregC == 0);
+}
+
+
+###########################################################################################
+# Bitfield Operations: insert, uextra, sextra (Register Form)
+###########################################################################################
+
+#
+# rA <= insert(rB, p:rC[12:8], l:rC[4:0])  (register form)
+#
+:insert eregA, eregB, eregC is group=7 & ins0011=0x198 ; eregA & eregB & eregC & imm1619=0
+{
+    local pos:4 = (eregC >> 8) & 0x1f;
+    local len:4 = eregC & 0x1f;
+    if (len == 0) goto <done>;
+    local mask:4 = (1 << len) - 1;
+    local field:4 = (eregB & mask) << pos;
+    local clr:4 = ~(mask << pos);
+    eregA = (eregA & clr) | field;
+<done>
+}
+
+#
+# rA = uextra(rB, p:rC[12:8], l:rC[4:0])  (register unsigned extract)
+#
+:uextra eregA, eregB, eregC is group=7 & ins0011=0x19c ; eregA & eregB & eregC & imm1619=0
+{
+    local pos:4 = (eregC >> 8) & 0x1f;
+    local len:4 = eregC & 0x1f;
+    if (len == 0) goto <zero>;
+    local mask:4 = (1 << len) - 1;
+    eregA = (eregB >> pos) & mask;
+    goto <done>;
+<zero>
+    eregA = 0;
+<done>
+}
+
+#
+# rA = sextra(rB, p:rC[12:8], l:rC[4:0])  (register signed extract)
+#
+:sextra eregA, eregB, eregC is group=7 & ins0011=0x19c ; eregA & eregB & eregC & imm1619=1
+{
+    local pos:4 = (eregC >> 8) & 0x1f;
+    local len:4 = eregC & 0x1f;
+    if (len == 0) goto <zero>;
+    local shift:4 = 32 - len;
+    eregA = (eregB << (shift - pos)) s>> shift;
+    goto <done>;
+<zero>
+    eregA = 0;
+<done>
+}

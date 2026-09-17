@@ -1,0 +1,949 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<processor_spec>
+  <programcounter register="pc" />
+  <data_space space="ram" />
+  <context_data>
+    <context_set space="ram">
+      <set name="phase" val="0" />
+      <set name="parallel" val="0" />
+      <set name="parallel_phase" val="0" />
+      <set name="ifblock" val="0" />
+      <set name="closebracket" val="0" />
+      <set name="reploop" val="0" />
+    </context_set>
+  </context_data>
+
+  <volatile outputop="write_volatile" inputop="read_volatile">
+    <!-- Peripheral Memory-Mapped Registers (LSFR, BSFR, HSFR, PSFR, CSFR) -->
+    <range space="ram" first="0x00010000" last="0x0001ffff" />
+    <range space="ram" first="0x00020000" last="0x0002ffff" />
+    <range space="ram" first="0x00040000" last="0x0004ffff" />
+    <range space="ram" first="0x00050000" last="0x0005ffff" />
+    <range space="ram" first="0x01ee0000" last="0x01eeffff" />
+  </volatile>
+
+  <inferptrbounds>
+    <!-- Inform decompiler of valid pointer ranges to prevent treating memory addresses as scalar integers -->
+    <range space="ram" first="0x00010000" last="0x0005ffff" />
+    <range space="ram" first="0x01c00000" last="0x01c80000" />
+    <range space="ram" first="0x01ee0000" last="0x01eeffff" />
+    <range space="ram" first="0x01f20000" last="0x01f40000" />
+    <range space="ram" first="0x02000000" last="0x02800000" />
+    <range space="ram" first="0x04000000" last="0x04200000" />
+    <range space="ram" first="0x08000000" last="0x0c000000" />
+  </inferptrbounds>
+
+  <default_memory_blocks>
+    <!-- AC7911B8 System Memory Architecture -->
+    <!-- Flash Memory: 8 MBytes (64 MBit SPI NorFlash mapped via SFC) -->
+    <memory_block name="FLASH" start_address="ram:0x02000000" length="0x800000" mode="rx" initialized="false" />
+    <!-- Internal System SRAM: 512 KBytes (0x01c00000 to 0x01c80000) -->
+    <memory_block name="SRAM" start_address="ram:0x01c00000" length="0x80000" mode="rwx" initialized="false" />
+    <!-- Cache RAM / Scratchpad -->
+    <memory_block name="CACHE_RAM" start_address="ram:0x01f20000" length="0x20000" mode="rw" initialized="false" />
+    <!-- SDRAM Space (internal 2MB or external up to 32MB) -->
+    <memory_block name="SDRAM" start_address="ram:0x04000000" length="0x200000" mode="rwx" initialized="false" />
+    <!-- Core SFR Space (CSFR) -->
+    <memory_block name="CSFR" start_address="ram:0x01ee0000" length="0x10000" mode="rw" initialized="false" />
+    <!-- Low-Speed Peripheral SFRs (LSFR: Clock, Timers, UART, SPI, SD, SHA, USB, Audio) -->
+    <memory_block name="LSFR" start_address="ram:0x00010000" length="0x10000" mode="rw" initialized="false" />
+    <!-- Wireless / Bluetooth Baseband SFRs (BSFR) -->
+    <memory_block name="BSFR" start_address="ram:0x00020000" length="0x10000" mode="rw" initialized="false" />
+    <!-- High-Speed Peripheral SFRs (HSFR: SFC, SDR, PSRAM, JPG, Video ISC, Display IMD) -->
+    <memory_block name="HSFR" start_address="ram:0x00040000" length="0x10000" mode="rw" initialized="false" />
+    <!-- Port / GPIO Peripheral SFRs (PSFR: GPIO Port A-H, Wakeup, IOMAP) -->
+    <memory_block name="PSFR" start_address="ram:0x00050000" length="0x10000" mode="rw" initialized="false" />
+  </default_memory_blocks>
+
+  <default_symbols>
+    <!-- Interrupt Vector Table (128 vectors at 0x01c7fe00) -->
+    <symbol name="vector_SDTAP" address="ram:0x01c7fe00" entry="true" type="code" />
+    <symbol name="vector_EXCEPTION" address="ram:0x01c7fe04" entry="true" type="code" />
+    <symbol name="vector_SYSCALL" address="ram:0x01c7fe08" entry="true" type="code" />
+    <symbol name="vector_TICK_TMR" address="ram:0x01c7fe0c" entry="true" type="code" />
+    <symbol name="vector_TIMER0" address="ram:0x01c7fe10" entry="true" type="code" />
+    <symbol name="vector_TIMER1" address="ram:0x01c7fe14" entry="true" type="code" />
+    <symbol name="vector_TIMER2" address="ram:0x01c7fe18" entry="true" type="code" />
+    <symbol name="vector_TIMER3" address="ram:0x01c7fe1c" entry="true" type="code" />
+    <symbol name="vector_USB_SOF" address="ram:0x01c7fe20" entry="true" type="code" />
+    <symbol name="vector_USB_CTRL" address="ram:0x01c7fe24" entry="true" type="code" />
+    <symbol name="vector_RTC_WDT" address="ram:0x01c7fe28" entry="true" type="code" />
+    <symbol name="vector_ALNK" address="ram:0x01c7fe2c" entry="true" type="code" />
+    <symbol name="vector_ALNK1" address="ram:0x01c7fe30" entry="true" type="code" />
+    <symbol name="vector_AUDIO" address="ram:0x01c7fe34" entry="true" type="code" />
+    <symbol name="vector_PORT" address="ram:0x01c7fe38" entry="true" type="code" />
+    <symbol name="vector_SPI0" address="ram:0x01c7fe3c" entry="true" type="code" />
+    <symbol name="vector_SPI1" address="ram:0x01c7fe40" entry="true" type="code" />
+    <symbol name="vector_SD0" address="ram:0x01c7fe44" entry="true" type="code" />
+    <symbol name="vector_SD1" address="ram:0x01c7fe48" entry="true" type="code" />
+    <symbol name="vector_UART0" address="ram:0x01c7fe4c" entry="true" type="code" />
+    <symbol name="vector_UART1" address="ram:0x01c7fe50" entry="true" type="code" />
+    <symbol name="vector_UART2" address="ram:0x01c7fe54" entry="true" type="code" />
+    <symbol name="vector_PAP" address="ram:0x01c7fe58" entry="true" type="code" />
+    <symbol name="vector_IIC" address="ram:0x01c7fe5c" entry="true" type="code" />
+    <symbol name="vector_SARADC" address="ram:0x01c7fe60" entry="true" type="code" />
+    <symbol name="vector_SPI3" address="ram:0x01c7fe64" entry="true" type="code" />
+    <symbol name="vector_GPC" address="ram:0x01c7fe68" entry="true" type="code" />
+    <symbol name="vector_EMI" address="ram:0x01c7fe6c" entry="true" type="code" />
+    <symbol name="vector_OSA" address="ram:0x01c7fe70" entry="true" type="code" />
+    <symbol name="vector_BLE_RX" address="ram:0x01c7fe74" entry="true" type="code" />
+    <symbol name="vector_NFC" address="ram:0x01c7fe78" entry="true" type="code" />
+    <symbol name="vector_AES" address="ram:0x01c7fe7c" entry="true" type="code" />
+    <symbol name="vector_RDEC" address="ram:0x01c7fe80" entry="true" type="code" />
+    <symbol name="vector_MCTMRX" address="ram:0x01c7fe84" entry="true" type="code" />
+    <symbol name="vector_CHX_PWM" address="ram:0x01c7fe88" entry="true" type="code" />
+    <symbol name="vector_SPDETX" address="ram:0x01c7fe8c" entry="true" type="code" />
+    <symbol name="vector_CTM" address="ram:0x01c7fe90" entry="true" type="code" />
+    <symbol name="vector_SPI2" address="ram:0x01c7fe94" entry="true" type="code" />
+    <symbol name="vector_PLNK" address="ram:0x01c7fe98" entry="true" type="code" />
+    <symbol name="vector_PLNK1" address="ram:0x01c7fe9c" entry="true" type="code" />
+    <symbol name="vector_BREDR" address="ram:0x01c7fea0" entry="true" type="code" />
+    <symbol name="vector_BT_CLKN" address="ram:0x01c7fea4" entry="true" type="code" />
+    <symbol name="vector_BT_DBG" address="ram:0x01c7fea8" entry="true" type="code" />
+    <symbol name="vector_WL_LOFC" address="ram:0x01c7feac" entry="true" type="code" />
+    <symbol name="vector_LRCT" address="ram:0x01c7feb0" entry="true" type="code" />
+    <symbol name="vector_BLE_EVENT" address="ram:0x01c7feb4" entry="true" type="code" />
+    <symbol name="vector_SBC" address="ram:0x01c7feb8" entry="true" type="code" />
+    <symbol name="vector_SS" address="ram:0x01c7febc" entry="true" type="code" />
+    <symbol name="vector_DMA_COPY" address="ram:0x01c7fec0" entry="true" type="code" />
+    <symbol name="vector_PMU_PND0" address="ram:0x01c7fec4" entry="true" type="code" />
+    <symbol name="vector_PMU_PND1" address="ram:0x01c7fec8" entry="true" type="code" />
+    <symbol name="vector_LDMA" address="ram:0x01c7fecc" entry="true" type="code" />
+    <symbol name="vector_WF" address="ram:0x01c7fed0" entry="true" type="code" />
+    <symbol name="vector_USB1_SOF" address="ram:0x01c7fed4" entry="true" type="code" />
+    <symbol name="vector_USB1_CTRL" address="ram:0x01c7fed8" entry="true" type="code" />
+    <symbol name="vector_JPG" address="ram:0x01c7fedc" entry="true" type="code" />
+    <symbol name="vector_SHA" address="ram:0x01c7fee0" entry="true" type="code" />
+    <symbol name="vector_FFT" address="ram:0x01c7fee4" entry="true" type="code" />
+    <symbol name="vector_SRC" address="ram:0x01c7fee8" entry="true" type="code" />
+    <symbol name="vector_ISC0" address="ram:0x01c7feec" entry="true" type="code" />
+    <symbol name="vector_EQ" address="ram:0x01c7fef0" entry="true" type="code" />
+    <symbol name="vector_WF_RSVD" address="ram:0x01c7fef4" entry="true" type="code" />
+    <symbol name="vector_TIMER4" address="ram:0x01c7fef8" entry="true" type="code" />
+    <symbol name="vector_TIMER5" address="ram:0x01c7fefc" entry="true" type="code" />
+    <symbol name="vector_ISC1" address="ram:0x01c7ff00" entry="true" type="code" />
+    <symbol name="vector_IMD" address="ram:0x01c7ff04" entry="true" type="code" />
+    <symbol name="vector_SOFT0" address="ram:0x01c7ffe0" entry="true" type="code" />
+    <symbol name="vector_SOFT1" address="ram:0x01c7ffe4" entry="true" type="code" />
+    <symbol name="vector_SOFT2" address="ram:0x01c7ffe8" entry="true" type="code" />
+    <symbol name="vector_SOFT3" address="ram:0x01c7ffec" entry="true" type="code" />
+    <symbol name="vector_SOFT4" address="ram:0x01c7fff0" entry="true" type="code" />
+    <symbol name="vector_SOFT5" address="ram:0x01c7fff4" entry="true" type="code" />
+    <symbol name="vector_SOFT6" address="ram:0x01c7fff8" entry="true" type="code" />
+    <symbol name="vector_SOFT7" address="ram:0x01c7fffc" entry="true" type="code" />
+
+    <!-- Memory-Mapped Hardware Peripheral Registers -->
+    <symbol name="JL_CLOCK_PWR_CON" address="ram:0x00010000" size="4" />
+    <symbol name="JL_CLOCK_RESERVED0" address="ram:0x00010004" size="4" />
+    <symbol name="JL_CLOCK_SYS_DIV" address="ram:0x00010008" size="4" />
+    <symbol name="JL_CLOCK_CLK_CON0" address="ram:0x0001000c" size="4" />
+    <symbol name="JL_CLOCK_CLK_CON1" address="ram:0x00010010" size="4" />
+    <symbol name="JL_CLOCK_CLK_CON2" address="ram:0x00010014" size="4" />
+    <symbol name="JL_CLOCK_CLK_CON3" address="ram:0x00010018" size="4" />
+    <symbol name="JL_SYSTEM_RST_SRC" address="ram:0x000100c0" size="4" />
+    <symbol name="JL_MODE_CON" address="ram:0x00010100" size="4" />
+    <symbol name="JL_INTEST_CHIP_ID" address="ram:0x00010200" size="4" />
+    <symbol name="JL_TIMER0_CON" address="ram:0x00010400" size="4" />
+    <symbol name="JL_TIMER0_CNT" address="ram:0x00010404" size="4" />
+    <symbol name="JL_TIMER0_PRD" address="ram:0x00010408" size="4" />
+    <symbol name="JL_TIMER0_PWM" address="ram:0x0001040c" size="4" />
+    <symbol name="JL_TIMER1_CON" address="ram:0x00010500" size="4" />
+    <symbol name="JL_TIMER1_CNT" address="ram:0x00010504" size="4" />
+    <symbol name="JL_TIMER1_PRD" address="ram:0x00010508" size="4" />
+    <symbol name="JL_TIMER1_PWM" address="ram:0x0001050c" size="4" />
+    <symbol name="JL_TIMER2_CON" address="ram:0x00010600" size="4" />
+    <symbol name="JL_TIMER2_CNT" address="ram:0x00010604" size="4" />
+    <symbol name="JL_TIMER2_PRD" address="ram:0x00010608" size="4" />
+    <symbol name="JL_TIMER2_PWM" address="ram:0x0001060c" size="4" />
+    <symbol name="JL_TIMER3_CON" address="ram:0x00010700" size="4" />
+    <symbol name="JL_TIMER3_CNT" address="ram:0x00010704" size="4" />
+    <symbol name="JL_TIMER3_PRD" address="ram:0x00010708" size="4" />
+    <symbol name="JL_TIMER3_PWM" address="ram:0x0001070c" size="4" />
+    <symbol name="JL_TIMER4_CON" address="ram:0x00010800" size="4" />
+    <symbol name="JL_TIMER4_CNT" address="ram:0x00010804" size="4" />
+    <symbol name="JL_TIMER4_PRD" address="ram:0x00010808" size="4" />
+    <symbol name="JL_TIMER4_PWM" address="ram:0x0001080c" size="4" />
+    <symbol name="JL_TIMER5_CON" address="ram:0x00010900" size="4" />
+    <symbol name="JL_TIMER5_CNT" address="ram:0x00010904" size="4" />
+    <symbol name="JL_TIMER5_PRD" address="ram:0x00010908" size="4" />
+    <symbol name="JL_TIMER5_PWM" address="ram:0x0001090c" size="4" />
+    <symbol name="JL_PCNT_CON" address="ram:0x00011000" size="1" />
+    <symbol name="JL_PCNT_VAL" address="ram:0x00011004" size="4" />
+    <symbol name="JL_GPCNT_CON" address="ram:0x00011100" size="4" />
+    <symbol name="JL_GPCNT_NUM" address="ram:0x00011104" size="4" />
+    <symbol name="JL_SD0_CON0" address="ram:0x00011400" size="4" />
+    <symbol name="JL_SD0_CON1" address="ram:0x00011404" size="4" />
+    <symbol name="JL_SD0_CON2" address="ram:0x00011408" size="4" />
+    <symbol name="JL_SD0_CPTR" address="ram:0x0001140c" size="4" />
+    <symbol name="JL_SD0_DPTR" address="ram:0x00011410" size="4" />
+    <symbol name="JL_SD0_CTU_CON" address="ram:0x00011414" size="4" />
+    <symbol name="JL_SD0_CTU_CNT" address="ram:0x00011418" size="4" />
+    <symbol name="JL_SD1_CON0" address="ram:0x00011500" size="4" />
+    <symbol name="JL_SD1_CON1" address="ram:0x00011504" size="4" />
+    <symbol name="JL_SD1_CON2" address="ram:0x00011508" size="4" />
+    <symbol name="JL_SD1_CPTR" address="ram:0x0001150c" size="4" />
+    <symbol name="JL_SD1_DPTR" address="ram:0x00011510" size="4" />
+    <symbol name="JL_SD1_CTU_CON" address="ram:0x00011514" size="4" />
+    <symbol name="JL_SD1_CTU_CNT" address="ram:0x00011518" size="4" />
+    <symbol name="JL_SHA_CON" address="ram:0x00011700" size="4" />
+    <symbol name="JL_SHA_ADR" address="ram:0x00011704" size="4" />
+    <symbol name="JL_SHA_RESULT0" address="ram:0x00011708" size="4" />
+    <symbol name="JL_SHA_RESULT1" address="ram:0x0001170c" size="4" />
+    <symbol name="JL_SHA_RESULT2" address="ram:0x00011710" size="4" />
+    <symbol name="JL_SHA_RESULT3" address="ram:0x00011714" size="4" />
+    <symbol name="JL_SHA_RESULT4" address="ram:0x00011718" size="4" />
+    <symbol name="JL_SHA_RESULT5" address="ram:0x0001171c" size="4" />
+    <symbol name="JL_SHA_RESULT6" address="ram:0x00011720" size="4" />
+    <symbol name="JL_SHA_RESULT7" address="ram:0x00011724" size="4" />
+    <symbol name="JL_USB_CON0" address="ram:0x00011800" size="4" />
+    <symbol name="JL_USB_CON1" address="ram:0x00011804" size="4" />
+    <symbol name="JL_USB_EP0_CNT" address="ram:0x00011808" size="4" />
+    <symbol name="JL_USB_EP1_CNT" address="ram:0x0001180c" size="4" />
+    <symbol name="JL_USB_EP2_CNT" address="ram:0x00011810" size="4" />
+    <symbol name="JL_USB_EP3_CNT" address="ram:0x00011814" size="4" />
+    <symbol name="JL_USB_EP0_ADR" address="ram:0x00011818" size="4" />
+    <symbol name="JL_USB_EP1_TADR" address="ram:0x0001181c" size="4" />
+    <symbol name="JL_USB_EP1_RADR" address="ram:0x00011820" size="4" />
+    <symbol name="JL_USB_EP2_TADR" address="ram:0x00011824" size="4" />
+    <symbol name="JL_USB_EP2_RADR" address="ram:0x00011828" size="4" />
+    <symbol name="JL_USB_EP3_TADR" address="ram:0x0001182c" size="4" />
+    <symbol name="JL_USB_EP3_RADR" address="ram:0x00011830" size="4" />
+    <symbol name="JL_USB_EP4_CNT" address="ram:0x00011834" size="4" />
+    <symbol name="JL_USB_EP4_TADR" address="ram:0x00011838" size="4" />
+    <symbol name="JL_USB_EP4_RADR" address="ram:0x0001183c" size="4" />
+    <symbol name="JL_ANA_WLA_CON0" address="ram:0x00011900" size="4" />
+    <symbol name="JL_ANA_WLA_CON1" address="ram:0x00011904" size="4" />
+    <symbol name="JL_ANA_WLA_CON2" address="ram:0x00011908" size="4" />
+    <symbol name="JL_ANA_WLA_CON3" address="ram:0x0001190c" size="4" />
+    <symbol name="JL_ANA_WLA_CON4" address="ram:0x00011910" size="4" />
+    <symbol name="JL_ANA_WLA_CON5" address="ram:0x00011914" size="4" />
+    <symbol name="JL_ANA_WLA_CON6" address="ram:0x00011918" size="4" />
+    <symbol name="JL_ANA_WLA_CON7" address="ram:0x0001191c" size="4" />
+    <symbol name="JL_ANA_WLA_CON8" address="ram:0x00011920" size="4" />
+    <symbol name="JL_ANA_WLA_CON9" address="ram:0x00011924" size="4" />
+    <symbol name="JL_ANA_WLA_CON10" address="ram:0x00011928" size="4" />
+    <symbol name="JL_ANA_WLA_CON11" address="ram:0x0001192c" size="4" />
+    <symbol name="JL_ANA_WLA_CON12" address="ram:0x00011930" size="4" />
+    <symbol name="JL_ANA_WLA_CON13" address="ram:0x00011934" size="4" />
+    <symbol name="JL_ANA_WLA_CON14" address="ram:0x00011938" size="4" />
+    <symbol name="JL_ANA_WLA_CON15" address="ram:0x0001193c" size="4" />
+    <symbol name="JL_ANA_WLA_CON16" address="ram:0x00011940" size="4" />
+    <symbol name="JL_ANA_WLA_CON17" address="ram:0x00011944" size="4" />
+    <symbol name="JL_ANA_WLA_CON18" address="ram:0x00011948" size="4" />
+    <symbol name="JL_ANA_WLA_CON19" address="ram:0x0001194c" size="4" />
+    <symbol name="JL_ANA_WLA_CON20" address="ram:0x00011950" size="4" />
+    <symbol name="JL_ANA_WLA_CON21" address="ram:0x00011954" size="4" />
+    <symbol name="JL_ANA_WLA_CON22" address="ram:0x00011958" size="4" />
+    <symbol name="JL_ANA_WLA_CON23" address="ram:0x0001195c" size="4" />
+    <symbol name="JL_ANA_WLA_CON24" address="ram:0x00011960" size="4" />
+    <symbol name="JL_ANA_WLA_CON25" address="ram:0x00011964" size="4" />
+    <symbol name="JL_ANA_WLA_CON26" address="ram:0x00011968" size="4" />
+    <symbol name="JL_ANA_WLA_CON27" address="ram:0x0001196c" size="4" />
+    <symbol name="JL_ANA_WLA_CON28" address="ram:0x00011970" size="4" />
+    <symbol name="JL_ANA_WLA_CON29" address="ram:0x00011974" size="4" />
+    <symbol name="JL_ANA_WLA_CON30" address="ram:0x00011978" size="4" />
+    <symbol name="JL_ANA_WLA_CON31" address="ram:0x0001197c" size="4" />
+    <symbol name="JL_ANA_WLA_CON32" address="ram:0x00011980" size="4" />
+    <symbol name="JL_ANA_WLA_CON33" address="ram:0x00011984" size="4" />
+    <symbol name="JL_ANA_WLA_CON34" address="ram:0x00011988" size="4" />
+    <symbol name="JL_ANA_WLA_CON35" address="ram:0x0001198c" size="4" />
+    <symbol name="JL_ANA_WLA_CON36" address="ram:0x00011990" size="4" />
+    <symbol name="JL_ANA_WLA_CON37" address="ram:0x00011994" size="4" />
+    <symbol name="JL_ANA_WLA_CON38" address="ram:0x00011998" size="4" />
+    <symbol name="JL_ANA_WLA_CON39" address="ram:0x0001199c" size="4" />
+    <symbol name="JL_ANA_PLL_CON0" address="ram:0x000119a0" size="4" />
+    <symbol name="JL_ANA_PLL_CON1" address="ram:0x000119a4" size="4" />
+    <symbol name="JL_ANA_PLL2_CON0" address="ram:0x000119a8" size="4" />
+    <symbol name="JL_ANA_PLL2_CON1" address="ram:0x000119ac" size="4" />
+    <symbol name="JL_ANA_RESERVED0" address="ram:0x000119b0" size="4" />
+    <symbol name="JL_ANA_DAA_CON0" address="ram:0x000119b4" size="4" />
+    <symbol name="JL_ANA_DAA_CON1" address="ram:0x000119b8" size="4" />
+    <symbol name="JL_ANA_DAA_CON2" address="ram:0x000119bc" size="4" />
+    <symbol name="JL_ANA_DAA_CON3" address="ram:0x000119c0" size="4" />
+    <symbol name="JL_ANA_RESERVED1" address="ram:0x000119c4" size="4" />
+    <symbol name="JL_ANA_DAA_CON7" address="ram:0x000119c8" size="4" />
+    <symbol name="JL_ANA_ADA_CON0" address="ram:0x000119cc" size="4" />
+    <symbol name="JL_ANA_ADA_CON1" address="ram:0x000119d0" size="4" />
+    <symbol name="JL_ANA_ADA_CON2" address="ram:0x000119d4" size="4" />
+    <symbol name="JL_SPI0_CON" address="ram:0x00011c00" size="4" />
+    <symbol name="JL_SPI0_BAUD" address="ram:0x00011c04" size="4" />
+    <symbol name="JL_SPI0_BUF" address="ram:0x00011c08" size="4" />
+    <symbol name="JL_SPI0_ADR" address="ram:0x00011c0c" size="4" />
+    <symbol name="JL_SPI0_CNT" address="ram:0x00011c10" size="4" />
+    <symbol name="JL_SPI1_CON" address="ram:0x00011d00" size="4" />
+    <symbol name="JL_SPI1_BAUD" address="ram:0x00011d04" size="4" />
+    <symbol name="JL_SPI1_BUF" address="ram:0x00011d08" size="4" />
+    <symbol name="JL_SPI1_ADR" address="ram:0x00011d0c" size="4" />
+    <symbol name="JL_SPI1_CNT" address="ram:0x00011d10" size="4" />
+    <symbol name="JL_SPI2_CON" address="ram:0x00011e00" size="4" />
+    <symbol name="JL_SPI2_BAUD" address="ram:0x00011e04" size="4" />
+    <symbol name="JL_SPI2_BUF" address="ram:0x00011e08" size="4" />
+    <symbol name="JL_SPI2_ADR" address="ram:0x00011e0c" size="4" />
+    <symbol name="JL_SPI2_CNT" address="ram:0x00011e10" size="4" />
+    <symbol name="JL_SPI3_CON" address="ram:0x00011f00" size="4" />
+    <symbol name="JL_SPI3_BAUD" address="ram:0x00011f04" size="4" />
+    <symbol name="JL_SPI3_BUF" address="ram:0x00011f08" size="4" />
+    <symbol name="JL_SPI3_ADR" address="ram:0x00011f0c" size="4" />
+    <symbol name="JL_SPI3_CNT" address="ram:0x00011f10" size="4" />
+    <symbol name="JL_UART0_CON0" address="ram:0x00012000" size="2" />
+    <symbol name="JL_UART0_CON1" address="ram:0x00012004" size="2" />
+    <symbol name="JL_UART0_BAUD" address="ram:0x00012008" size="2" />
+    <symbol name="JL_UART0_BUF" address="ram:0x0001200c" size="1" />
+    <symbol name="JL_UART0_OTCNT" address="ram:0x00012010" size="4" />
+    <symbol name="JL_UART0_TXADR" address="ram:0x00012014" size="4" />
+    <symbol name="JL_UART0_TXCNT" address="ram:0x00012018" size="2" />
+    <symbol name="JL_UART0_RXSADR" address="ram:0x0001201c" size="4" />
+    <symbol name="JL_UART0_RXEADR" address="ram:0x00012020" size="4" />
+    <symbol name="JL_UART0_RXCNT" address="ram:0x00012024" size="4" />
+    <symbol name="JL_UART0_HRXCNT" address="ram:0x00012028" size="2" />
+    <symbol name="JL_UART1_CON0" address="ram:0x00012100" size="2" />
+    <symbol name="JL_UART1_CON1" address="ram:0x00012104" size="2" />
+    <symbol name="JL_UART1_BAUD" address="ram:0x00012108" size="2" />
+    <symbol name="JL_UART1_BUF" address="ram:0x0001210c" size="1" />
+    <symbol name="JL_UART1_OTCNT" address="ram:0x00012110" size="4" />
+    <symbol name="JL_UART1_TXADR" address="ram:0x00012114" size="4" />
+    <symbol name="JL_UART1_TXCNT" address="ram:0x00012118" size="2" />
+    <symbol name="JL_UART1_RXSADR" address="ram:0x0001211c" size="4" />
+    <symbol name="JL_UART1_RXEADR" address="ram:0x00012120" size="4" />
+    <symbol name="JL_UART1_RXCNT" address="ram:0x00012124" size="4" />
+    <symbol name="JL_UART1_HRXCNT" address="ram:0x00012128" size="2" />
+    <symbol name="JL_UART2_CON0" address="ram:0x00012200" size="2" />
+    <symbol name="JL_UART2_CON1" address="ram:0x00012204" size="2" />
+    <symbol name="JL_UART2_BAUD" address="ram:0x00012208" size="2" />
+    <symbol name="JL_UART2_BUF" address="ram:0x0001220c" size="1" />
+    <symbol name="JL_UART2_OTCNT" address="ram:0x00012210" size="4" />
+    <symbol name="JL_UART2_TXADR" address="ram:0x00012214" size="4" />
+    <symbol name="JL_UART2_TXCNT" address="ram:0x00012218" size="2" />
+    <symbol name="JL_UART2_RXSADR" address="ram:0x0001221c" size="4" />
+    <symbol name="JL_UART2_RXEADR" address="ram:0x00012220" size="4" />
+    <symbol name="JL_UART2_RXCNT" address="ram:0x00012224" size="4" />
+    <symbol name="JL_UART2_HRXCNT" address="ram:0x00012228" size="2" />
+    <symbol name="JL_IIC_CON0" address="ram:0x00012400" size="2" />
+    <symbol name="JL_IIC_BUF" address="ram:0x00012404" size="1" />
+    <symbol name="JL_IIC_BAUD" address="ram:0x00012408" size="1" />
+    <symbol name="JL_IIC_CON1" address="ram:0x0001240c" size="2" />
+    <symbol name="JL_USB1_CON0" address="ram:0x00012700" size="4" />
+    <symbol name="JL_USB1_CON1" address="ram:0x00012704" size="4" />
+    <symbol name="JL_USB1_EP0_CNT" address="ram:0x00012708" size="4" />
+    <symbol name="JL_USB1_EP1_CNT" address="ram:0x0001270c" size="4" />
+    <symbol name="JL_USB1_EP2_CNT" address="ram:0x00012710" size="4" />
+    <symbol name="JL_USB1_EP3_CNT" address="ram:0x00012714" size="4" />
+    <symbol name="JL_USB1_EP0_ADR" address="ram:0x00012718" size="4" />
+    <symbol name="JL_USB1_EP1_TADR" address="ram:0x0001271c" size="4" />
+    <symbol name="JL_USB1_EP1_RADR" address="ram:0x00012720" size="4" />
+    <symbol name="JL_USB1_EP2_TADR" address="ram:0x00012724" size="4" />
+    <symbol name="JL_USB1_EP2_RADR" address="ram:0x00012728" size="4" />
+    <symbol name="JL_USB1_EP3_TADR" address="ram:0x0001272c" size="4" />
+    <symbol name="JL_USB1_EP3_RADR" address="ram:0x00012730" size="4" />
+    <symbol name="JL_USB1_EP4_CNT" address="ram:0x00012734" size="4" />
+    <symbol name="JL_USB1_EP4_TADR" address="ram:0x00012738" size="4" />
+    <symbol name="JL_USB1_EP4_RADR" address="ram:0x0001273c" size="4" />
+    <symbol name="JL_PAP_CON" address="ram:0x00012800" size="4" />
+    <symbol name="JL_PAP_DAT0" address="ram:0x00012804" size="4" />
+    <symbol name="JL_PAP_DAT1" address="ram:0x00012808" size="4" />
+    <symbol name="JL_PAP_BUF" address="ram:0x0001280c" size="4" />
+    <symbol name="JL_PAP_ADR" address="ram:0x00012810" size="4" />
+    <symbol name="JL_PAP_CNT" address="ram:0x00012814" size="4" />
+    <symbol name="JL_SS_CON" address="ram:0x00012b00" size="4" />
+    <symbol name="JL_SS_SR_CNT" address="ram:0x00012b04" size="4" />
+    <symbol name="JL_SS_IO_CON" address="ram:0x00012b08" size="4" />
+    <symbol name="JL_SS_DMA_CON" address="ram:0x00012b0c" size="4" />
+    <symbol name="JL_SS_DMA_LEN" address="ram:0x00012b10" size="4" />
+    <symbol name="JL_SS_DAT_ADR" address="ram:0x00012b14" size="4" />
+    <symbol name="JL_SS_INF_ADR" address="ram:0x00012b18" size="4" />
+    <symbol name="JL_SS_CSB0" address="ram:0x00012b1c" size="4" />
+    <symbol name="JL_SS_CSB1" address="ram:0x00012b20" size="4" />
+    <symbol name="JL_SS_CSB2" address="ram:0x00012b24" size="4" />
+    <symbol name="JL_SS_CSB3" address="ram:0x00012b28" size="4" />
+    <symbol name="JL_SS_CSB4" address="ram:0x00012b2c" size="4" />
+    <symbol name="JL_SS_CSB5" address="ram:0x00012b30" size="4" />
+    <symbol name="JL_RDEC_CON" address="ram:0x00012c00" size="1" />
+    <symbol name="JL_RDEC_DAT" address="ram:0x00012c04" size="1" />
+    <symbol name="JL_PLNK0_CON" address="ram:0x00012d00" size="2" />
+    <symbol name="JL_PLNK0_SMR" address="ram:0x00012d04" size="1" />
+    <symbol name="JL_PLNK0_ADR" address="ram:0x00012d08" size="4" />
+    <symbol name="JL_PLNK0_LEN" address="ram:0x00012d0c" size="4" />
+    <symbol name="JL_ALNK0_CON0" address="ram:0x00012e00" size="2" />
+    <symbol name="JL_ALNK0_CON1" address="ram:0x00012e04" size="2" />
+    <symbol name="JL_ALNK0_CON2" address="ram:0x00012e08" size="1" />
+    <symbol name="JL_ALNK0_CON3" address="ram:0x00012e0c" size="1" />
+    <symbol name="JL_ALNK0_ADR0" address="ram:0x00012e10" size="4" />
+    <symbol name="JL_ALNK0_ADR1" address="ram:0x00012e14" size="4" />
+    <symbol name="JL_ALNK0_ADR2" address="ram:0x00012e18" size="4" />
+    <symbol name="JL_ALNK0_ADR3" address="ram:0x00012e1c" size="4" />
+    <symbol name="JL_ALNK0_LEN" address="ram:0x00012e20" size="2" />
+    <symbol name="JL_AUDIO_DAC_CON" address="ram:0x00012f00" size="4" />
+    <symbol name="JL_AUDIO_DAC_ADR" address="ram:0x00012f04" size="4" />
+    <symbol name="JL_AUDIO_DAC_LEN" address="ram:0x00012f08" size="2" />
+    <symbol name="JL_AUDIO_DAC_PNS" address="ram:0x00012f0c" size="2" />
+    <symbol name="JL_AUDIO_DAC_HRP" address="ram:0x00012f10" size="2" />
+    <symbol name="JL_AUDIO_DAC_SWP" address="ram:0x00012f14" size="2" />
+    <symbol name="JL_AUDIO_DAC_SWN" address="ram:0x00012f18" size="2" />
+    <symbol name="JL_AUDIO_RESERVED7" address="ram:0x00012f1c" size="4" />
+    <symbol name="JL_AUDIO_DAC_VL0" address="ram:0x00012f20" size="4" />
+    <symbol name="JL_AUDIO_DAC_VL1" address="ram:0x00012f24" size="4" />
+    <symbol name="JL_AUDIO_DAC_TM0" address="ram:0x00012f28" size="4" />
+    <symbol name="JL_AUDIO_DAC_TM1" address="ram:0x00012f2c" size="4" />
+    <symbol name="JL_AUDIO_DAC_DTV" address="ram:0x00012f30" size="2" />
+    <symbol name="JL_AUDIO_DAC_DTB" address="ram:0x00012f34" size="2" />
+    <symbol name="JL_AUDIO_RESERVEDe" address="ram:0x00012f38" size="4" />
+    <symbol name="JL_AUDIO_DAC_COP" address="ram:0x00012f3c" size="2" />
+    <symbol name="JL_AUDIO_ADC_CON" address="ram:0x00012f40" size="4" />
+    <symbol name="JL_AUDIO_ADC_ADR" address="ram:0x00012f44" size="4" />
+    <symbol name="JL_AUDIO_ADC_LEN" address="ram:0x00012f48" size="2" />
+    <symbol name="JL_AUDIO_ADC_PNS" address="ram:0x00012f4c" size="2" />
+    <symbol name="JL_AUDIO_ADC_HWP" address="ram:0x00012f50" size="2" />
+    <symbol name="JL_AUDIO_ADC_SRP" address="ram:0x00012f54" size="2" />
+    <symbol name="JL_AUDIO_ADC_SRN" address="ram:0x00012f58" size="2" />
+    <symbol name="JL_ENC_CON" address="ram:0x00013000" size="4" />
+    <symbol name="JL_ENC_KEY" address="ram:0x00013004" size="4" />
+    <symbol name="JL_ENC_ADR" address="ram:0x00013008" size="4" />
+    <symbol name="JL_ADC_CON" address="ram:0x00013100" size="4" />
+    <symbol name="JL_ADC_RES" address="ram:0x00013104" size="4" />
+    <symbol name="JL_IR_RFLT_CON" address="ram:0x00013200" size="4" />
+    <symbol name="JL_OSA_CON" address="ram:0x00013400" size="4" />
+    <symbol name="JL_CRC_FIFO" address="ram:0x00013500" size="4" />
+    <symbol name="JL_CRC_REG" address="ram:0x00013504" size="4" />
+    <symbol name="JL_LRCT_CON" address="ram:0x00013600" size="4" />
+    <symbol name="JL_LRCT_NUM" address="ram:0x00013604" size="4" />
+    <symbol name="JL_EFUSE_CON" address="ram:0x00013700" size="4" />
+    <symbol name="JL_EFUSE_RESERVED" address="ram:0x00013704" size="4" />
+    <symbol name="JL_EFUSE_ME" address="ram:0x00013708" size="4" />
+    <symbol name="JL_RAND_R64L" address="ram:0x00013b00" size="4" />
+    <symbol name="JL_RAND_R64H" address="ram:0x00013b04" size="4" />
+    <symbol name="JL_CTM_CON0" address="ram:0x00013c00" size="4" />
+    <symbol name="JL_CTM_CON1" address="ram:0x00013c04" size="4" />
+    <symbol name="JL_CTM_RES" address="ram:0x00013c08" size="4" />
+    <symbol name="JL_SBC_CON0" address="ram:0x00013d00" size="4" />
+    <symbol name="JL_SBC_DEC_SRC_ADR" address="ram:0x00013d04" size="4" />
+    <symbol name="JL_SBC_DEC_DST_ADR" address="ram:0x00013d08" size="4" />
+    <symbol name="JL_SBC_DEC_PCM_WCNT" address="ram:0x00013d0c" size="4" />
+    <symbol name="JL_SBC_DEC_INBUF_LEN" address="ram:0x00013d10" size="4" />
+    <symbol name="JL_SBC_ENC_SRC_ADR" address="ram:0x00013d14" size="4" />
+    <symbol name="JL_SBC_ENC_DST_ADR" address="ram:0x00013d18" size="4" />
+    <symbol name="JL_SBC_DEC_DST_BASE" address="ram:0x00013d1c" size="4" />
+    <symbol name="JL_P33_PMU_CON" address="ram:0x00013e00" size="4" />
+    <symbol name="JL_P33_RTC_CON" address="ram:0x00013e04" size="4" />
+    <symbol name="JL_P33_SPI_CON" address="ram:0x00013e08" size="4" />
+    <symbol name="JL_P33_SPI_DAT" address="ram:0x00013e0c" size="4" />
+    <symbol name="JL_DMA_PRI0" address="ram:0x00013f00" size="4" />
+    <symbol name="JL_DMA_PRI1" address="ram:0x00013f04" size="4" />
+    <symbol name="JL_DMA_PRI2" address="ram:0x00013f08" size="4" />
+    <symbol name="JL_DMA_PRI3" address="ram:0x00013f0c" size="4" />
+    <symbol name="JL_DMA_PRI4" address="ram:0x00013f10" size="4" />
+    <symbol name="JL_DMA_MSG" address="ram:0x00013f14" size="4" />
+    <symbol name="JL_DMA_MSG_CH" address="ram:0x00013f18" size="4" />
+    <symbol name="JL_DMA_RDH" address="ram:0x00013f1c" size="4" />
+    <symbol name="JL_DMA_WRL" address="ram:0x00013f20" size="4" />
+    <symbol name="JL_DMA_WRH" address="ram:0x00013f24" size="4" />
+    <symbol name="JL_WL_WL_CON0" address="ram:0x00014000" size="4" />
+    <symbol name="JL_WL_WL_CON1" address="ram:0x00014004" size="4" />
+    <symbol name="JL_WL_WL_CON2" address="ram:0x00014008" size="4" />
+    <symbol name="JL_WL_WL_CON3" address="ram:0x0001400c" size="4" />
+    <symbol name="JL_WL_WL_CON4" address="ram:0x00014010" size="4" />
+    <symbol name="JL_WL_WL_CON5" address="ram:0x00014014" size="4" />
+    <symbol name="JL_WL_WL_CON6" address="ram:0x00014018" size="4" />
+    <symbol name="JL_WL_WL_CON7" address="ram:0x0001401c" size="4" />
+    <symbol name="JL_WL_LOFC_CON" address="ram:0x00014020" size="4" />
+    <symbol name="JL_WL_LOFC_RES" address="ram:0x00014024" size="4" />
+    <symbol name="JL_WL_WL_ANL_CON0" address="ram:0x00014028" size="4" />
+    <symbol name="JL_WL_WL_ANL_CON1" address="ram:0x0001402c" size="4" />
+    <symbol name="JL_WL_WL_ANL_CON2" address="ram:0x00014030" size="4" />
+    <symbol name="JL_WL_WL_ANL_CON3" address="ram:0x00014034" size="4" />
+    <symbol name="JL_WL_WF_CON0" address="ram:0x00014038" size="4" />
+    <symbol name="JL_WL_WF_CON1" address="ram:0x0001403c" size="4" />
+    <symbol name="JL_WL_WF_CON2" address="ram:0x00014040" size="4" />
+    <symbol name="JL_WL_WF_CON3" address="ram:0x00014044" size="4" />
+    <symbol name="JL_WL_WF_CON4" address="ram:0x00014048" size="4" />
+    <symbol name="JL_WL_WF_CON5" address="ram:0x0001404c" size="4" />
+    <symbol name="JL_WL_WF_CON6" address="ram:0x00014050" size="4" />
+    <symbol name="JL_WL_WF_CON7" address="ram:0x00014054" size="4" />
+    <symbol name="JL_WL_WF_CON8" address="ram:0x00014058" size="4" />
+    <symbol name="JL_WL_WF_CON9" address="ram:0x0001405c" size="4" />
+    <symbol name="JL_WL_SD_CON0" address="ram:0x00014060" size="4" />
+    <symbol name="JL_WL_SD_CON1" address="ram:0x00014064" size="4" />
+    <symbol name="JL_WL_SD_CON2" address="ram:0x00014068" size="4" />
+    <symbol name="JL_WL_SD_CTU_CON" address="ram:0x0001406c" size="4" />
+    <symbol name="JL_WL_SD_CTU_CNT" address="ram:0x00014070" size="4" />
+    <symbol name="JL_WL_SD_CPTR" address="ram:0x00014074" size="4" />
+    <symbol name="JL_WL_SD_DPTR" address="ram:0x00014078" size="4" />
+    <symbol name="JL_SRC_CON0" address="ram:0x00014300" size="4" />
+    <symbol name="JL_SRC_CON1" address="ram:0x00014304" size="4" />
+    <symbol name="JL_SRC_CON2" address="ram:0x00014308" size="4" />
+    <symbol name="JL_SRC_CON3" address="ram:0x0001430c" size="4" />
+    <symbol name="JL_SRC_IDAT_ADR" address="ram:0x00014310" size="4" />
+    <symbol name="JL_SRC_IDAT_LEN" address="ram:0x00014314" size="4" />
+    <symbol name="JL_SRC_ODAT_ADR" address="ram:0x00014318" size="4" />
+    <symbol name="JL_SRC_ODAT_LEN" address="ram:0x0001431c" size="4" />
+    <symbol name="JL_SRC_FLTB_ADR" address="ram:0x00014320" size="4" />
+    <symbol name="JL_ALNK1_CON0" address="ram:0x00015100" size="2" />
+    <symbol name="JL_ALNK1_CON1" address="ram:0x00015104" size="2" />
+    <symbol name="JL_ALNK1_CON2" address="ram:0x00015108" size="1" />
+    <symbol name="JL_ALNK1_CON3" address="ram:0x0001510c" size="1" />
+    <symbol name="JL_ALNK1_ADR0" address="ram:0x00015110" size="4" />
+    <symbol name="JL_ALNK1_ADR1" address="ram:0x00015114" size="4" />
+    <symbol name="JL_ALNK1_ADR2" address="ram:0x00015118" size="4" />
+    <symbol name="JL_ALNK1_ADR3" address="ram:0x0001511c" size="4" />
+    <symbol name="JL_ALNK1_LEN" address="ram:0x00015120" size="2" />
+    <symbol name="JL_PLNK1_CON" address="ram:0x00015200" size="2" />
+    <symbol name="JL_PLNK1_SMR" address="ram:0x00015204" size="1" />
+    <symbol name="JL_PLNK1_ADR" address="ram:0x00015208" size="4" />
+    <symbol name="JL_PLNK1_LEN" address="ram:0x0001520c" size="4" />
+    <symbol name="JL_MBIST_MBISTCTLL" address="ram:0x00015300" size="4" />
+    <symbol name="JL_MBIST_MBISTSOGOL" address="ram:0x00015304" size="4" />
+    <symbol name="JL_MBISTW_MBISTCTLW" address="ram:0x00015400" size="4" />
+    <symbol name="JL_MBISTW_MBISTSOGOW" address="ram:0x00015404" size="4" />
+    <symbol name="JL_EQ_CON0" address="ram:0x0001e000" size="4" />
+    <symbol name="JL_EQ_CON1" address="ram:0x0001e004" size="4" />
+    <symbol name="JL_EQ_CON2" address="ram:0x0001e008" size="4" />
+    <symbol name="JL_EQ_CON3" address="ram:0x0001e00c" size="4" />
+    <symbol name="JL_EQ_DATAI_ADR" address="ram:0x0001e010" size="4" />
+    <symbol name="JL_EQ_DATAO_ADR" address="ram:0x0001e014" size="4" />
+    <symbol name="JL_EQ_DATA_LEN" address="ram:0x0001e018" size="4" />
+    <symbol name="JL_EQ_FLT_ADR" address="ram:0x0001e01c" size="4" />
+    <symbol name="JL_ANC_CON0" address="ram:0x0001f000" size="4" />
+    <symbol name="JL_ANC_CON1" address="ram:0x0001f004" size="4" />
+    <symbol name="JL_ANC_CON2" address="ram:0x0001f008" size="4" />
+    <symbol name="JL_ANC_CON3" address="ram:0x0001f00c" size="4" />
+    <symbol name="JL_ANC_CON4" address="ram:0x0001f010" size="4" />
+    <symbol name="JL_ANC_CON5" address="ram:0x0001f014" size="4" />
+    <symbol name="JL_ANC_CON6" address="ram:0x0001f018" size="4" />
+    <symbol name="JL_ANC_CON7" address="ram:0x0001f01c" size="4" />
+    <symbol name="JL_ANC_CON8" address="ram:0x0001f020" size="4" />
+    <symbol name="JL_ANC_CON9" address="ram:0x0001f024" size="4" />
+    <symbol name="JL_ANC_CON10" address="ram:0x0001f028" size="4" />
+    <symbol name="JL_ANC_CON11" address="ram:0x0001f02c" size="4" />
+    <symbol name="JL_ANC_CON12" address="ram:0x0001f030" size="4" />
+    <symbol name="JL_ANC_CON13" address="ram:0x0001f034" size="4" />
+    <symbol name="JL_SFC_CON" address="ram:0x00040200" size="4" />
+    <symbol name="JL_SFC_BAUD" address="ram:0x00040204" size="4" />
+    <symbol name="JL_SFC_CODE" address="ram:0x00040208" size="4" />
+    <symbol name="JL_SFC_BASE_ADR" address="ram:0x0004020c" size="4" />
+    <symbol name="JL_SFCENC_CON" address="ram:0x00040300" size="1" />
+    <symbol name="JL_SFCENC_KEY" address="ram:0x00040304" size="2" />
+    <symbol name="JL_SFCENC_UNENC_ADRH" address="ram:0x00040308" size="4" />
+    <symbol name="JL_SFCENC_UNENC_ADRL" address="ram:0x0004030c" size="4" />
+    <symbol name="JL_SFCENC_LENC_ADRH" address="ram:0x00040310" size="4" />
+    <symbol name="JL_SFCENC_LENC_ADRL" address="ram:0x00040314" size="4" />
+    <symbol name="JL_SDR_CON0" address="ram:0x00040400" size="4" />
+    <symbol name="JL_SDR_CON1" address="ram:0x00040404" size="4" />
+    <symbol name="JL_SDR_CON2" address="ram:0x00040408" size="4" />
+    <symbol name="JL_SDR_CON3" address="ram:0x0004040c" size="4" />
+    <symbol name="JL_SDR_CON4" address="ram:0x00040410" size="4" />
+    <symbol name="JL_SDR_CON5" address="ram:0x00040414" size="4" />
+    <symbol name="JL_SDR_CON6" address="ram:0x00040418" size="4" />
+    <symbol name="JL_SDR_CON7" address="ram:0x0004041c" size="4" />
+    <symbol name="JL_SDR_CON8" address="ram:0x00040420" size="4" />
+    <symbol name="JL_SDR_CON9" address="ram:0x00040424" size="4" />
+    <symbol name="JL_SDR_CON10" address="ram:0x00040428" size="4" />
+    <symbol name="JL_SDR_CON11" address="ram:0x0004042c" size="4" />
+    <symbol name="JL_SDR_CON12" address="ram:0x00040430" size="4" />
+    <symbol name="JL_SDR_CON13" address="ram:0x00040434" size="4" />
+    <symbol name="JL_SDR_DBG_INFO" address="ram:0x00040438" size="4" />
+    <symbol name="JL_SDR_DBG_START" address="ram:0x0004043c" size="4" />
+    <symbol name="JL_SDR_DBG_END" address="ram:0x00040440" size="4" />
+    <symbol name="JL_SDR_DBG_ADR" address="ram:0x00040444" size="4" />
+    <symbol name="JL_PSRAM_CON" address="ram:0x00040500" size="4" />
+    <symbol name="JL_PSRAM_BAUD" address="ram:0x00040504" size="4" />
+    <symbol name="JL_PSRAM_QUCNT" address="ram:0x00040508" size="4" />
+    <symbol name="JL_MBISTH_MBISTCTLH" address="ram:0x00041100" size="4" />
+    <symbol name="JL_MBISTH_MBISTSOGOH" address="ram:0x00041104" size="4" />
+    <symbol name="JL_AES_CON" address="ram:0x00041200" size="4" />
+    <symbol name="JL_AES_DATIN" address="ram:0x00041204" size="4" />
+    <symbol name="JL_AES_KEY" address="ram:0x00041208" size="4" />
+    <symbol name="JL_AES_ENCRES0" address="ram:0x0004120c" size="4" />
+    <symbol name="JL_AES_ENCRES1" address="ram:0x00041210" size="4" />
+    <symbol name="JL_AES_ENCRES2" address="ram:0x00041214" size="4" />
+    <symbol name="JL_AES_ENCRES3" address="ram:0x00041218" size="4" />
+    <symbol name="JL_AES_DECRES0" address="ram:0x0004121c" size="4" />
+    <symbol name="JL_AES_DECRES1" address="ram:0x00041220" size="4" />
+    <symbol name="JL_AES_DECRES2" address="ram:0x00041224" size="4" />
+    <symbol name="JL_AES_DECRES3" address="ram:0x00041228" size="4" />
+    <symbol name="JL_DCP_CON" address="ram:0x00041300" size="4" />
+    <symbol name="JL_DCP_ADR" address="ram:0x00041304" size="4" />
+    <symbol name="JL_EMI_CON0" address="ram:0x00041400" size="4" />
+    <symbol name="JL_EMI_CON1" address="ram:0x00041404" size="4" />
+    <symbol name="JL_EMI_CON2" address="ram:0x00041408" size="4" />
+    <symbol name="JL_EMI_ADR" address="ram:0x0004140c" size="4" />
+    <symbol name="JL_EMI_CNT" address="ram:0x00041410" size="4" />
+    <symbol name="JL_JPG_CON0" address="ram:0x00041900" size="4" />
+    <symbol name="JL_JPG_CON1" address="ram:0x00041904" size="4" />
+    <symbol name="JL_JPG_CON2" address="ram:0x00041908" size="4" />
+    <symbol name="JL_JPG_YUVLINE" address="ram:0x0004190c" size="4" />
+    <symbol name="JL_JPG_YDCVAL" address="ram:0x00041910" size="4" />
+    <symbol name="JL_JPG_UDCVAL" address="ram:0x00041914" size="4" />
+    <symbol name="JL_JPG_VDCVAL" address="ram:0x00041918" size="4" />
+    <symbol name="JL_JPG_YPTR" address="ram:0x0004191c" size="4" />
+    <symbol name="JL_JPG_UPTR" address="ram:0x00041920" size="4" />
+    <symbol name="JL_JPG_VPTR" address="ram:0x00041924" size="4" />
+    <symbol name="JL_JPG_BADDR" address="ram:0x00041928" size="4" />
+    <symbol name="JL_JPG_BCNT" address="ram:0x0004192c" size="4" />
+    <symbol name="JL_JPG_MCUCNT" address="ram:0x00041930" size="4" />
+    <symbol name="JL_JPG_PRECNT" address="ram:0x00041934" size="4" />
+    <symbol name="JL_JPG_HQTBLADR" address="ram:0x00041938" size="4" />
+    <symbol name="JL_JPG_HQTBLDAT" address="ram:0x0004193c" size="4" />
+    <symbol name="JL_JPG_PTR_NUM" address="ram:0x00041940" size="4" />
+    <symbol name="JL_JPG_HAS_PTR" address="ram:0x00041944" size="4" />
+    <symbol name="JL_JPG_MCU_BUF" address="ram:0x00041948" size="4" />
+    <symbol name="JL_ISC0_COM_CON" address="ram:0x00041a00" size="4" />
+    <symbol name="JL_ISC0_PND_CON" address="ram:0x00041a04" size="4" />
+    <symbol name="JL_ISC0_PND_CLR" address="ram:0x00041a08" size="4" />
+    <symbol name="JL_ISC0_RCV_CON" address="ram:0x00041a0c" size="4" />
+    <symbol name="JL_ISC0_RCV_VTT" address="ram:0x00041a10" size="4" />
+    <symbol name="JL_ISC0_RCV_VBLK" address="ram:0x00041a14" size="4" />
+    <symbol name="JL_ISC0_RCV_VACT" address="ram:0x00041a18" size="4" />
+    <symbol name="JL_ISC0_RCV_HTT" address="ram:0x00041a1c" size="4" />
+    <symbol name="JL_ISC0_RCV_HBLK" address="ram:0x00041a20" size="4" />
+    <symbol name="JL_ISC0_RCV_HACT" address="ram:0x00041a24" size="4" />
+    <symbol name="JL_ISC0_FRC_CON" address="ram:0x00041a28" size="4" />
+    <symbol name="JL_ISC0_OSD_CON" address="ram:0x00041a2c" size="4" />
+    <symbol name="JL_ISC0_OSD_BASE" address="ram:0x00041a30" size="4" />
+    <symbol name="JL_ISC0_OSD_H_CFG" address="ram:0x00041a34" size="4" />
+    <symbol name="JL_ISC0_OSD_V_CFG" address="ram:0x00041a38" size="4" />
+    <symbol name="JL_ISC0_OSD_COLOR" address="ram:0x00041a3c" size="4" />
+    <symbol name="JL_ISC0_DMA_CON" address="ram:0x00041a40" size="4" />
+    <symbol name="JL_ISC0_DMA_CNT" address="ram:0x00041a44" size="4" />
+    <symbol name="JL_ISC0_DMA_BASE0_Y" address="ram:0x00041a48" size="4" />
+    <symbol name="JL_ISC0_DMA_BASE0_U" address="ram:0x00041a4c" size="4" />
+    <symbol name="JL_ISC0_DMA_BASE0_V" address="ram:0x00041a50" size="4" />
+    <symbol name="JL_ISC0_DMA_BASE1_Y" address="ram:0x00041a54" size="4" />
+    <symbol name="JL_ISC0_DMA_BASE1_U" address="ram:0x00041a58" size="4" />
+    <symbol name="JL_ISC0_DMA_BASE1_V" address="ram:0x00041a5c" size="4" />
+    <symbol name="JL_ISC1_COM_CON" address="ram:0x00041b00" size="4" />
+    <symbol name="JL_ISC1_PND_CON" address="ram:0x00041b04" size="4" />
+    <symbol name="JL_ISC1_PND_CLR" address="ram:0x00041b08" size="4" />
+    <symbol name="JL_ISC1_RCV_CON" address="ram:0x00041b0c" size="4" />
+    <symbol name="JL_ISC1_RCV_VTT" address="ram:0x00041b10" size="4" />
+    <symbol name="JL_ISC1_RCV_VBLK" address="ram:0x00041b14" size="4" />
+    <symbol name="JL_ISC1_RCV_VACT" address="ram:0x00041b18" size="4" />
+    <symbol name="JL_ISC1_RCV_HTT" address="ram:0x00041b1c" size="4" />
+    <symbol name="JL_ISC1_RCV_HBLK" address="ram:0x00041b20" size="4" />
+    <symbol name="JL_ISC1_RCV_HACT" address="ram:0x00041b24" size="4" />
+    <symbol name="JL_ISC1_FRC_CON" address="ram:0x00041b28" size="4" />
+    <symbol name="JL_ISC1_OSD_CON" address="ram:0x00041b2c" size="4" />
+    <symbol name="JL_ISC1_OSD_BASE" address="ram:0x00041b30" size="4" />
+    <symbol name="JL_ISC1_OSD_H_CFG" address="ram:0x00041b34" size="4" />
+    <symbol name="JL_ISC1_OSD_V_CFG" address="ram:0x00041b38" size="4" />
+    <symbol name="JL_ISC1_OSD_COLOR" address="ram:0x00041b3c" size="4" />
+    <symbol name="JL_ISC1_DMA_CON" address="ram:0x00041b40" size="4" />
+    <symbol name="JL_ISC1_DMA_CNT" address="ram:0x00041b44" size="4" />
+    <symbol name="JL_ISC1_DMA_BASE0_Y" address="ram:0x00041b48" size="4" />
+    <symbol name="JL_ISC1_DMA_BASE0_U" address="ram:0x00041b4c" size="4" />
+    <symbol name="JL_ISC1_DMA_BASE0_V" address="ram:0x00041b50" size="4" />
+    <symbol name="JL_ISC1_DMA_BASE1_Y" address="ram:0x00041b54" size="4" />
+    <symbol name="JL_ISC1_DMA_BASE1_U" address="ram:0x00041b58" size="4" />
+    <symbol name="JL_ISC1_DMA_BASE1_V" address="ram:0x00041b5c" size="4" />
+    <symbol name="JL_DBG_CON" address="ram:0x00041c00" size="4" />
+    <symbol name="JL_DBG_WR_ALLOW_ID0" address="ram:0x00041c04" size="4" />
+    <symbol name="JL_DBG_WR_ALLOW_ID1" address="ram:0x00041c08" size="4" />
+    <symbol name="JL_DBG_LIMIT_H" address="ram:0x00041c0c" size="4" />
+    <symbol name="JL_DBG_LIMIT_L" address="ram:0x00041c10" size="4" />
+    <symbol name="JL_DBG_WR_LIMIT_ID" address="ram:0x00041c14" size="4" />
+    <symbol name="JL_IMD_CON0" address="ram:0x00041d00" size="4" />
+    <symbol name="JL_IMD_CON1" address="ram:0x00041d04" size="4" />
+    <symbol name="JL_IMD_CON2" address="ram:0x00041d08" size="4" />
+    <symbol name="JL_IMD_CON3" address="ram:0x00041d0c" size="4" />
+    <symbol name="JL_IMD_LD_START_ADR" address="ram:0x00041d10" size="4" />
+    <symbol name="JL_IMD_DEBUG_PIXEL" address="ram:0x00041d14" size="4" />
+    <symbol name="JL_IMD_SPI_CON0" address="ram:0x00041d18" size="4" />
+    <symbol name="JL_IMD_SPI_BAUD" address="ram:0x00041d1c" size="2" />
+    <symbol name="JL_IMD_SPI_BUF" address="ram:0x00041d20" size="4" />
+    <symbol name="JL_IMD_PAP_CON0" address="ram:0x00041d24" size="4" />
+    <symbol name="JL_IMD_PAP_PRD" address="ram:0x00041d28" size="4" />
+    <symbol name="JL_IMD_PAP_BUF" address="ram:0x00041d2c" size="4" />
+    <symbol name="JL_IMD_RGB_CON0" address="ram:0x00041d30" size="4" />
+    <symbol name="JL_IMD_RGB_HPRD" address="ram:0x00041d34" size="4" />
+    <symbol name="JL_IMD_RGB_VPRD" address="ram:0x00041d38" size="4" />
+    <symbol name="JL_PORTA_OUT" address="ram:0x00050000" size="4" />
+    <symbol name="JL_PORTA_IN" address="ram:0x00050004" size="4" />
+    <symbol name="JL_PORTA_DIR" address="ram:0x00050008" size="4" />
+    <symbol name="JL_PORTA_DIE" address="ram:0x0005000c" size="4" />
+    <symbol name="JL_PORTA_PU" address="ram:0x00050010" size="4" />
+    <symbol name="JL_PORTA_PD" address="ram:0x00050014" size="4" />
+    <symbol name="JL_PORTA_HD0" address="ram:0x00050018" size="4" />
+    <symbol name="JL_PORTA_HD" address="ram:0x0005001c" size="4" />
+    <symbol name="JL_PORTA_DIEH" address="ram:0x00050020" size="4" />
+    <symbol name="JL_PORTB_OUT" address="ram:0x00050040" size="4" />
+    <symbol name="JL_PORTB_IN" address="ram:0x00050044" size="4" />
+    <symbol name="JL_PORTB_DIR" address="ram:0x00050048" size="4" />
+    <symbol name="JL_PORTB_DIE" address="ram:0x0005004c" size="4" />
+    <symbol name="JL_PORTB_PU" address="ram:0x00050050" size="4" />
+    <symbol name="JL_PORTB_PD" address="ram:0x00050054" size="4" />
+    <symbol name="JL_PORTB_HD0" address="ram:0x00050058" size="4" />
+    <symbol name="JL_PORTB_HD" address="ram:0x0005005c" size="4" />
+    <symbol name="JL_PORTB_DIEH" address="ram:0x00050060" size="4" />
+    <symbol name="JL_PORTC_OUT" address="ram:0x00050080" size="4" />
+    <symbol name="JL_PORTC_IN" address="ram:0x00050084" size="4" />
+    <symbol name="JL_PORTC_DIR" address="ram:0x00050088" size="4" />
+    <symbol name="JL_PORTC_DIE" address="ram:0x0005008c" size="4" />
+    <symbol name="JL_PORTC_PU" address="ram:0x00050090" size="4" />
+    <symbol name="JL_PORTC_PD" address="ram:0x00050094" size="4" />
+    <symbol name="JL_PORTC_HD0" address="ram:0x00050098" size="4" />
+    <symbol name="JL_PORTC_HD" address="ram:0x0005009c" size="4" />
+    <symbol name="JL_PORTC_DIEH" address="ram:0x000500a0" size="4" />
+    <symbol name="JL_PORTD_OUT" address="ram:0x000500c0" size="4" />
+    <symbol name="JL_PORTD_IN" address="ram:0x000500c4" size="4" />
+    <symbol name="JL_PORTD_DIR" address="ram:0x000500c8" size="4" />
+    <symbol name="JL_PORTD_DIE" address="ram:0x000500cc" size="4" />
+    <symbol name="JL_PORTD_PU" address="ram:0x000500d0" size="4" />
+    <symbol name="JL_PORTD_PD" address="ram:0x000500d4" size="4" />
+    <symbol name="JL_PORTD_HD0" address="ram:0x000500d8" size="4" />
+    <symbol name="JL_PORTD_HD" address="ram:0x000500dc" size="4" />
+    <symbol name="JL_PORTD_DIEH" address="ram:0x000500e0" size="4" />
+    <symbol name="JL_PORTE_OUT" address="ram:0x00050100" size="4" />
+    <symbol name="JL_PORTE_IN" address="ram:0x00050104" size="4" />
+    <symbol name="JL_PORTE_DIR" address="ram:0x00050108" size="4" />
+    <symbol name="JL_PORTE_DIE" address="ram:0x0005010c" size="4" />
+    <symbol name="JL_PORTE_PU" address="ram:0x00050110" size="4" />
+    <symbol name="JL_PORTE_PD" address="ram:0x00050114" size="4" />
+    <symbol name="JL_PORTE_HD0" address="ram:0x00050118" size="4" />
+    <symbol name="JL_PORTE_HD" address="ram:0x0005011c" size="4" />
+    <symbol name="JL_PORTE_DIEH" address="ram:0x00050120" size="4" />
+    <symbol name="JL_PORTF_OUT" address="ram:0x00050140" size="4" />
+    <symbol name="JL_PORTF_IN" address="ram:0x00050144" size="4" />
+    <symbol name="JL_PORTF_DIR" address="ram:0x00050148" size="4" />
+    <symbol name="JL_PORTF_DIE" address="ram:0x0005014c" size="4" />
+    <symbol name="JL_PORTF_PU" address="ram:0x00050150" size="4" />
+    <symbol name="JL_PORTF_PD" address="ram:0x00050154" size="4" />
+    <symbol name="JL_PORTF_HD0" address="ram:0x00050158" size="4" />
+    <symbol name="JL_PORTF_HD" address="ram:0x0005015c" size="4" />
+    <symbol name="JL_PORTF_DIEH" address="ram:0x00050160" size="4" />
+    <symbol name="JL_PORTG_OUT" address="ram:0x00050180" size="4" />
+    <symbol name="JL_PORTG_IN" address="ram:0x00050184" size="4" />
+    <symbol name="JL_PORTG_DIR" address="ram:0x00050188" size="4" />
+    <symbol name="JL_PORTG_DIE" address="ram:0x0005018c" size="4" />
+    <symbol name="JL_PORTG_PU" address="ram:0x00050190" size="4" />
+    <symbol name="JL_PORTG_PD" address="ram:0x00050194" size="4" />
+    <symbol name="JL_PORTG_HD0" address="ram:0x00050198" size="4" />
+    <symbol name="JL_PORTG_HD" address="ram:0x0005019c" size="4" />
+    <symbol name="JL_PORTG_DIEH" address="ram:0x000501a0" size="4" />
+    <symbol name="JL_PORTH_OUT" address="ram:0x000501c0" size="4" />
+    <symbol name="JL_PORTH_IN" address="ram:0x000501c4" size="4" />
+    <symbol name="JL_PORTH_DIR" address="ram:0x000501c8" size="4" />
+    <symbol name="JL_PORTH_DIE" address="ram:0x000501cc" size="4" />
+    <symbol name="JL_PORTH_PU" address="ram:0x000501d0" size="4" />
+    <symbol name="JL_PORTH_PD" address="ram:0x000501d4" size="4" />
+    <symbol name="JL_PORTH_HD0" address="ram:0x000501d8" size="4" />
+    <symbol name="JL_PORTH_HD" address="ram:0x000501dc" size="4" />
+    <symbol name="JL_PORTH_DIEH" address="ram:0x000501e0" size="4" />
+    <symbol name="JL_USB_IO_CON0" address="ram:0x00051000" size="4" />
+    <symbol name="JL_USB_IO_CON1" address="ram:0x00051004" size="4" />
+    <symbol name="JL_USB_IO_CON2" address="ram:0x00051008" size="4" />
+    <symbol name="JL_WAKEUP_CON0" address="ram:0x0005100c" size="4" />
+    <symbol name="JL_WAKEUP_CON1" address="ram:0x00051010" size="4" />
+    <symbol name="JL_WAKEUP_CON2" address="ram:0x00051014" size="4" />
+    <symbol name="JL_WAKEUP_CON3" address="ram:0x00051018" size="4" />
+    <symbol name="JL_IOMAP_CON0" address="ram:0x0005101c" size="4" />
+    <symbol name="JL_IOMAP_CON1" address="ram:0x00051020" size="4" />
+    <symbol name="JL_IOMAP_CON2" address="ram:0x00051024" size="4" />
+    <symbol name="JL_IOMAP_CON3" address="ram:0x00051028" size="4" />
+    <symbol name="JL_IOMAP_CON4" address="ram:0x0005102c" size="4" />
+    <symbol name="JL_IOMAP_CON5" address="ram:0x00051030" size="4" />
+    <symbol name="JL_IOMAP_CON6" address="ram:0x00051034" size="4" />
+    <symbol name="JL_IOMAP_CON7" address="ram:0x00051038" size="4" />
+    <symbol name="JL_IOMAP_CON8" address="ram:0x0005103c" size="4" />
+    <symbol name="JL_LCDC_CON0" address="ram:0x00051100" size="4" />
+    <symbol name="JL_LCDC_RESERVED" address="ram:0x00051104" size="4" />
+    <symbol name="JL_LCDC_SEG_IOEN0" address="ram:0x00051108" size="4" />
+    <symbol name="JL_LCDC_SEG_IOEN1" address="ram:0x0005110c" size="4" />
+    <symbol name="JL_CMNG_SOFT_INT" address="ram:0x01ee0000" size="4" />
+    <symbol name="JL_CMNG_SOFT_SET" address="ram:0x01ee0004" size="4" />
+    <symbol name="JL_CMNG_SOFT_CLR" address="ram:0x01ee0008" size="4" />
+    <symbol name="JL_CMNG_CON" address="ram:0x01ee000c" size="4" />
+    <symbol name="JL_SDTAP_CON" address="ram:0x01ee0100" size="4" />
+    <symbol name="JL_SDTAP_KEY" address="ram:0x01ee0104" size="4" />
+    <symbol name="JL_MBIS_MBISTCTL" address="ram:0x01ee0200" size="4" />
+    <symbol name="JL_MBIS_MBISTSOGO" address="ram:0x01ee0204" size="4" />
+    <symbol name="JL_HMEM_CON" address="ram:0x01ee0300" size="4" />
+    <symbol name="JL_HMEM_PAGE_END" address="ram:0x01ee0304" size="4" />
+    <symbol name="JL_FFT_CON" address="ram:0x01ee0400" size="4" />
+    <symbol name="JL_FFT_CADR" address="ram:0x01ee0404" size="4" />
+    <symbol name="JL_FFT_CONST" address="ram:0x01ee0408" size="4" />
+    <symbol name="JL_FFT_TEST1" address="ram:0x01ee040c" size="4" />
+<!-- corex2 -->
+    <symbol name="JL_COREX2_C0_CON" address="ram:0x01eee000" size="4" />
+    <symbol name="JL_COREX2_C1_CON" address="ram:0x01eee004" size="4" />
+    <symbol name="JL_COREX2_CACHE_CON" address="ram:0x01eee008" size="4" />
+    <symbol name="JL_COREX2_DCACHE_WAY" address="ram:0x01eee00c" size="4" />
+    <symbol name="JL_COREX2_ICACHE_WAY" address="ram:0x01eee010" size="4" />
+    <symbol name="JL_COREX2_RING_OSC" address="ram:0x01eee014" size="4" />
+    <symbol name="JL_COREX2_DBG_WR_EN" address="ram:0x01eee240" size="4" />
+    <symbol name="JL_COREX2_DBG_MSG" address="ram:0x01eee244" size="4" />
+    <symbol name="JL_COREX2_DBG_MSG_CLR" address="ram:0x01eee248" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT0_H" address="ram:0x01eee280" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT1_H" address="ram:0x01eee284" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT2_H" address="ram:0x01eee288" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT3_H" address="ram:0x01eee28c" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT4_H" address="ram:0x01eee290" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT5_H" address="ram:0x01eee294" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT6_H" address="ram:0x01eee298" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT7_H" address="ram:0x01eee29c" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT0_L" address="ram:0x01eee2c0" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT1_L" address="ram:0x01eee2c4" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT2_L" address="ram:0x01eee2c8" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT3_L" address="ram:0x01eee2cc" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT4_L" address="ram:0x01eee2d0" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT5_L" address="ram:0x01eee2d4" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT6_L" address="ram:0x01eee2d8" size="4" />
+    <symbol name="JL_COREX2_WR_LIMIT7_L" address="ram:0x01eee2dc" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID0" address="ram:0x01eee300" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID1" address="ram:0x01eee304" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID2" address="ram:0x01eee308" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID3" address="ram:0x01eee30c" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID4" address="ram:0x01eee310" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID5" address="ram:0x01eee314" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID6" address="ram:0x01eee318" size="4" />
+    <symbol name="JL_COREX2_WR_ALLOW_ID7" address="ram:0x01eee31c" size="4" />
+    <symbol name="JL_COREX2_DBG_EN" address="ram:0x01eee340" size="4" />
+    <symbol name="JL_COREX2_DBG_CON" address="ram:0x01eee344" size="4" />
+    <symbol name="JL_COREX2_C0_WR_LIMIT_EN" address="ram:0x01eee348" size="4" />
+    <symbol name="JL_COREX2_C1_WR_LIMIT_EN" address="ram:0x01eee34c" size="4" />
+    <symbol name="JL_COREX2_PRP_WR_LIMIT_EN" address="ram:0x01eee350" size="4" />
+    <symbol name="JL_COREX2_PRP_WR_ALLOW_EN" address="ram:0x01eee354" size="4" />
+    <symbol name="JL_COREX2_PRP_OUTLIM_ERR_EN" address="ram:0x01eee358" size="4" />
+    <symbol name="JL_COREX2_C0_WR_LIMIT_ERR_NUM" address="ram:0x01eee360" size="4" />
+    <symbol name="JL_COREX2_C1_WR_LIMIT_ERR_NUM" address="ram:0x01eee364" size="4" />
+    <symbol name="JL_COREX2_PRP_WR_LIMIT_ERR_NUM" address="ram:0x01eee368" size="4" />
+    <symbol name="JL_COREX2_PRP_WR_LIMIT_ID" address="ram:0x01eee36c" size="4" />
+    <symbol name="JL_COREX2_AXI_RD_INV_ID" address="ram:0x01eee370" size="4" />
+    <symbol name="JL_COREX2_AXI_WR_INV_ID" address="ram:0x01eee374" size="4" />
+    <symbol name="JL_COREX2_PRP_MMU_ERR_WID" address="ram:0x01eee378" size="4" />
+    <symbol name="JL_COREX2_PRP_MMU_ERR_RID" address="ram:0x01eee37c" size="4" />
+    <symbol name="JL_COREX2_PC_LIMIT0_H" address="ram:0x01eee380" size="4" />
+    <symbol name="JL_COREX2_PC_LIMIT0_L" address="ram:0x01eee384" size="4" />
+    <symbol name="JL_COREX2_PC_LIMIT1_H" address="ram:0x01eee388" size="4" />
+    <symbol name="JL_COREX2_PC_LIMIT1_L" address="ram:0x01eee38c" size="4" />
+<!-- q32DSP0 -->
+    <symbol name="JL_DSP0_PMU_CON" address="ram:0x01eef0c0" size="4" />
+    <symbol name="JL_DSP0_EMU_CON" address="ram:0x01eef0d0" size="4" />
+    <symbol name="JL_DSP0_EMU_MSG" address="ram:0x01eef0d4" size="4" />
+    <symbol name="JL_DSP0_EMU_SSP_H" address="ram:0x01eef0d8" size="4" />
+    <symbol name="JL_DSP0_EMU_SSP_L" address="ram:0x01eef0dc" size="4" />
+    <symbol name="JL_DSP0_EMU_USP_H" address="ram:0x01eef0e0" size="4" />
+    <symbol name="JL_DSP0_EMU_USP_L" address="ram:0x01eef0e4" size="4" />
+    <symbol name="JL_DSP0_TTMR_CON" address="ram:0x01eef0ec" size="4" />
+    <symbol name="JL_DSP0_TTMR_CNT" address="ram:0x01eef0f0" size="4" />
+    <symbol name="JL_DSP0_TTMR_PRD" address="ram:0x01eef0f4" size="4" />
+    <symbol name="JL_DSP0_BANK_CON" address="ram:0x01eef0f8" size="4" />
+    <symbol name="JL_DSP0_BANK_NUM" address="ram:0x01eef0fc" size="4" />
+    <symbol name="JL_DSP0_ICFG00" address="ram:0x01eef100" size="4" />
+    <symbol name="JL_DSP0_ICFG01" address="ram:0x01eef104" size="4" />
+    <symbol name="JL_DSP0_ICFG02" address="ram:0x01eef108" size="4" />
+    <symbol name="JL_DSP0_ICFG03" address="ram:0x01eef10c" size="4" />
+    <symbol name="JL_DSP0_ICFG04" address="ram:0x01eef110" size="4" />
+    <symbol name="JL_DSP0_ICFG05" address="ram:0x01eef114" size="4" />
+    <symbol name="JL_DSP0_ICFG06" address="ram:0x01eef118" size="4" />
+    <symbol name="JL_DSP0_ICFG07" address="ram:0x01eef11c" size="4" />
+    <symbol name="JL_DSP0_ICFG08" address="ram:0x01eef120" size="4" />
+    <symbol name="JL_DSP0_ICFG09" address="ram:0x01eef124" size="4" />
+    <symbol name="JL_DSP0_ICFG10" address="ram:0x01eef128" size="4" />
+    <symbol name="JL_DSP0_ICFG11" address="ram:0x01eef12c" size="4" />
+    <symbol name="JL_DSP0_ICFG12" address="ram:0x01eef130" size="4" />
+    <symbol name="JL_DSP0_ICFG13" address="ram:0x01eef134" size="4" />
+    <symbol name="JL_DSP0_ICFG14" address="ram:0x01eef138" size="4" />
+    <symbol name="JL_DSP0_ICFG15" address="ram:0x01eef13c" size="4" />
+    <symbol name="JL_DSP0_ICFG16" address="ram:0x01eef140" size="4" />
+    <symbol name="JL_DSP0_ICFG17" address="ram:0x01eef144" size="4" />
+    <symbol name="JL_DSP0_ICFG18" address="ram:0x01eef148" size="4" />
+    <symbol name="JL_DSP0_ICFG19" address="ram:0x01eef14c" size="4" />
+    <symbol name="JL_DSP0_ICFG20" address="ram:0x01eef150" size="4" />
+    <symbol name="JL_DSP0_ICFG21" address="ram:0x01eef154" size="4" />
+    <symbol name="JL_DSP0_ICFG22" address="ram:0x01eef158" size="4" />
+    <symbol name="JL_DSP0_ICFG23" address="ram:0x01eef15c" size="4" />
+    <symbol name="JL_DSP0_ICFG24" address="ram:0x01eef160" size="4" />
+    <symbol name="JL_DSP0_ICFG25" address="ram:0x01eef164" size="4" />
+    <symbol name="JL_DSP0_ICFG26" address="ram:0x01eef168" size="4" />
+    <symbol name="JL_DSP0_ICFG27" address="ram:0x01eef16c" size="4" />
+    <symbol name="JL_DSP0_ICFG28" address="ram:0x01eef170" size="4" />
+    <symbol name="JL_DSP0_ICFG29" address="ram:0x01eef174" size="4" />
+    <symbol name="JL_DSP0_ICFG30" address="ram:0x01eef178" size="4" />
+    <symbol name="JL_DSP0_ICFG31" address="ram:0x01eef17c" size="4" />
+    <symbol name="JL_DSP0_IPND0" address="ram:0x01eef180" size="4" />
+    <symbol name="JL_DSP0_IPND1" address="ram:0x01eef184" size="4" />
+    <symbol name="JL_DSP0_IPND2" address="ram:0x01eef188" size="4" />
+    <symbol name="JL_DSP0_IPND3" address="ram:0x01eef18c" size="4" />
+    <symbol name="JL_DSP0_IPND4" address="ram:0x01eef190" size="4" />
+    <symbol name="JL_DSP0_IPND5" address="ram:0x01eef194" size="4" />
+    <symbol name="JL_DSP0_IPND6" address="ram:0x01eef198" size="4" />
+    <symbol name="JL_DSP0_IPND7" address="ram:0x01eef19c" size="4" />
+    <symbol name="JL_DSP0_ILAT_SET" address="ram:0x01eef1a0" size="4" />
+    <symbol name="JL_DSP0_ILAT_CLR" address="ram:0x01eef1a4" size="4" />
+    <symbol name="JL_DSP0_IPMASK" address="ram:0x01eef1a8" size="4" />
+    <symbol name="JL_DSP0_ETM_CON" address="ram:0x01eef1c0" size="4" />
+    <symbol name="JL_DSP0_ETM_PC0" address="ram:0x01eef1c4" size="4" />
+    <symbol name="JL_DSP0_ETM_PC1" address="ram:0x01eef1c8" size="4" />
+    <symbol name="JL_DSP0_ETM_PC2" address="ram:0x01eef1cc" size="4" />
+    <symbol name="JL_DSP0_ETM_PC3" address="ram:0x01eef1d0" size="4" />
+    <symbol name="JL_DSP0_WP0_ADRH" address="ram:0x01eef1d4" size="4" />
+    <symbol name="JL_DSP0_WP0_ADRL" address="ram:0x01eef1d8" size="4" />
+    <symbol name="JL_DSP0_WP0_DATH" address="ram:0x01eef1dc" size="4" />
+    <symbol name="JL_DSP0_WP0_DATL" address="ram:0x01eef1e0" size="4" />
+    <symbol name="JL_DSP0_WP0_PC" address="ram:0x01eef1e4" size="4" />
+<!-- q32DSP1 -->
+    <symbol name="JL_DSP1_PMU_CON" address="ram:0x01eef2c0" size="4" />
+    <symbol name="JL_DSP1_EMU_CON" address="ram:0x01eef2d0" size="4" />
+    <symbol name="JL_DSP1_EMU_MSG" address="ram:0x01eef2d4" size="4" />
+    <symbol name="JL_DSP1_EMU_SSP_H" address="ram:0x01eef2d8" size="4" />
+    <symbol name="JL_DSP1_EMU_SSP_L" address="ram:0x01eef2dc" size="4" />
+    <symbol name="JL_DSP1_EMU_USP_H" address="ram:0x01eef2e0" size="4" />
+    <symbol name="JL_DSP1_EMU_USP_L" address="ram:0x01eef2e4" size="4" />
+    <symbol name="JL_DSP1_TTMR_CON" address="ram:0x01eef2ec" size="4" />
+    <symbol name="JL_DSP1_TTMR_CNT" address="ram:0x01eef2f0" size="4" />
+    <symbol name="JL_DSP1_TTMR_PRD" address="ram:0x01eef2f4" size="4" />
+    <symbol name="JL_DSP1_BANK_CON" address="ram:0x01eef2f8" size="4" />
+    <symbol name="JL_DSP1_BANK_NUM" address="ram:0x01eef2fc" size="4" />
+    <symbol name="JL_DSP1_ICFG00" address="ram:0x01eef300" size="4" />
+    <symbol name="JL_DSP1_ICFG01" address="ram:0x01eef304" size="4" />
+    <symbol name="JL_DSP1_ICFG02" address="ram:0x01eef308" size="4" />
+    <symbol name="JL_DSP1_ICFG03" address="ram:0x01eef30c" size="4" />
+    <symbol name="JL_DSP1_ICFG04" address="ram:0x01eef310" size="4" />
+    <symbol name="JL_DSP1_ICFG05" address="ram:0x01eef314" size="4" />
+    <symbol name="JL_DSP1_ICFG06" address="ram:0x01eef318" size="4" />
+    <symbol name="JL_DSP1_ICFG07" address="ram:0x01eef31c" size="4" />
+    <symbol name="JL_DSP1_ICFG08" address="ram:0x01eef320" size="4" />
+    <symbol name="JL_DSP1_ICFG09" address="ram:0x01eef324" size="4" />
+    <symbol name="JL_DSP1_ICFG10" address="ram:0x01eef328" size="4" />
+    <symbol name="JL_DSP1_ICFG11" address="ram:0x01eef32c" size="4" />
+    <symbol name="JL_DSP1_ICFG12" address="ram:0x01eef330" size="4" />
+    <symbol name="JL_DSP1_ICFG13" address="ram:0x01eef334" size="4" />
+    <symbol name="JL_DSP1_ICFG14" address="ram:0x01eef338" size="4" />
+    <symbol name="JL_DSP1_ICFG15" address="ram:0x01eef33c" size="4" />
+    <symbol name="JL_DSP1_ICFG16" address="ram:0x01eef340" size="4" />
+    <symbol name="JL_DSP1_ICFG17" address="ram:0x01eef344" size="4" />
+    <symbol name="JL_DSP1_ICFG18" address="ram:0x01eef348" size="4" />
+    <symbol name="JL_DSP1_ICFG19" address="ram:0x01eef34c" size="4" />
+    <symbol name="JL_DSP1_ICFG20" address="ram:0x01eef350" size="4" />
+    <symbol name="JL_DSP1_ICFG21" address="ram:0x01eef354" size="4" />
+    <symbol name="JL_DSP1_ICFG22" address="ram:0x01eef358" size="4" />
+    <symbol name="JL_DSP1_ICFG23" address="ram:0x01eef35c" size="4" />
+    <symbol name="JL_DSP1_ICFG24" address="ram:0x01eef360" size="4" />
+    <symbol name="JL_DSP1_ICFG25" address="ram:0x01eef364" size="4" />
+    <symbol name="JL_DSP1_ICFG26" address="ram:0x01eef368" size="4" />
+    <symbol name="JL_DSP1_ICFG27" address="ram:0x01eef36c" size="4" />
+    <symbol name="JL_DSP1_ICFG28" address="ram:0x01eef370" size="4" />
+    <symbol name="JL_DSP1_ICFG29" address="ram:0x01eef374" size="4" />
+    <symbol name="JL_DSP1_ICFG30" address="ram:0x01eef378" size="4" />
+    <symbol name="JL_DSP1_ICFG31" address="ram:0x01eef37c" size="4" />
+    <symbol name="JL_DSP1_IPND0" address="ram:0x01eef380" size="4" />
+    <symbol name="JL_DSP1_IPND1" address="ram:0x01eef384" size="4" />
+    <symbol name="JL_DSP1_IPND2" address="ram:0x01eef388" size="4" />
+    <symbol name="JL_DSP1_IPND3" address="ram:0x01eef38c" size="4" />
+    <symbol name="JL_DSP1_IPND4" address="ram:0x01eef390" size="4" />
+    <symbol name="JL_DSP1_IPND5" address="ram:0x01eef394" size="4" />
+    <symbol name="JL_DSP1_IPND6" address="ram:0x01eef398" size="4" />
+    <symbol name="JL_DSP1_IPND7" address="ram:0x01eef39c" size="4" />
+    <symbol name="JL_DSP1_ILAT_SET" address="ram:0x01eef3a0" size="4" />
+    <symbol name="JL_DSP1_ILAT_CLR" address="ram:0x01eef3a4" size="4" />
+    <symbol name="JL_DSP1_IPMASK" address="ram:0x01eef3a8" size="4" />
+    <symbol name="JL_DSP1_ETM_CON" address="ram:0x01eef3c0" size="4" />
+    <symbol name="JL_DSP1_ETM_PC0" address="ram:0x01eef3c4" size="4" />
+    <symbol name="JL_DSP1_ETM_PC1" address="ram:0x01eef3c8" size="4" />
+    <symbol name="JL_DSP1_ETM_PC2" address="ram:0x01eef3cc" size="4" />
+    <symbol name="JL_DSP1_ETM_PC3" address="ram:0x01eef3d0" size="4" />
+    <symbol name="JL_DSP1_WP0_ADRH" address="ram:0x01eef3d4" size="4" />
+    <symbol name="JL_DSP1_WP0_ADRL" address="ram:0x01eef3d8" size="4" />
+    <symbol name="JL_DSP1_WP0_DATH" address="ram:0x01eef3dc" size="4" />
+    <symbol name="JL_DSP1_WP0_DATL" address="ram:0x01eef3e0" size="4" />
+    <symbol name="JL_DSP1_WP0_PC" address="ram:0x01eef3e4" size="4" />
+  </default_symbols>
+</processor_spec>

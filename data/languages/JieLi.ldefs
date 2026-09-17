@@ -18,10 +18,22 @@
             variant="default"
             version="1.0"
             slafile="pi32v2.sla"
-            processorspec="pi32.pspec"
+            processorspec="pi32v2.pspec"
             id="pi32v2:LE:32:default">
-    <description>JieLi's pi32v2 architecture</description>
-    <compiler name="default" spec="pi32.cspec" id="default" />
+    <description>JieLi's pi32v2 architecture (Generic)</description>
+    <compiler name="default" spec="pi32v2.cspec" id="default" />
+  </language>
+
+  <language processor="JieLi pi32v2"
+            endian="little"
+            size="32"
+            variant="ac7911b8"
+            version="1.0"
+            slafile="pi32v2.sla"
+            processorspec="pi32v2_ac7911b8.pspec"
+            id="pi32v2:LE:32:ac7911b8">
+    <description>JieLi AC7911B8 / WL82 (PI32V2 Dual-Core SoC)</description>
+    <compiler name="default" spec="pi32v2.cspec" id="default" />
   </language>
 
   <language processor="JieLi q32s"

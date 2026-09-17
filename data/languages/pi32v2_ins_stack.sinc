@@ -13,60 +13,88 @@ macro popreg(reg) { reg = *mult_addr; mult_addr = mult_addr + 4;}
 #######################################
 
 # Push register based on counter
-pshmapreg: r0 is counter=0 & r0 {pushreg(r0);}
-pshmapreg: r1 is counter=1 & r1 {pushreg(r1);}
-pshmapreg: r2 is counter=2 & r2 {pushreg(r2);}
-pshmapreg: r3 is counter=3 & r3 {pushreg(r3);}
-pshmapreg: r4 is counter=4 & r4 {pushreg(r4);}
-pshmapreg: r5 is counter=5 & r5 {pushreg(r5);}
-pshmapreg: r6 is counter=6 & r6 {pushreg(r6);}
-pshmapreg: r7 is counter=7 & r7 {pushreg(r7);}
-pshmapreg: r8 is counter=8 & r8 {pushreg(r8);}
-pshmapreg: r9 is counter=9 & r9 {pushreg(r9);}
-pshmapreg: r10 is counter=10 & r10 {pushreg(r10);}
-pshmapreg: r11 is counter=11 & r11 {pushreg(r11);}
-pshmapreg: r12 is counter=12 & r12 {pushreg(r12);}
-pshmapreg: r13 is counter=13 & r13 {pushreg(r13);}
-pshmapreg: r14 is counter=14 & r14 {pushreg(r14);}
-pshmapreg: r15 is counter=15 & r15 {pushreg(r15);}
+pshmapreg: "r0" is counter=0 {pushreg(r0);}
+pshmapreg: "r1" is counter=1 {pushreg(r1);}
+pshmapreg: "r2" is counter=2 {pushreg(r2);}
+pshmapreg: "r3" is counter=3 {pushreg(r3);}
+pshmapreg: "r4" is counter=4 {pushreg(r4);}
+pshmapreg: "r5" is counter=5 {pushreg(r5);}
+pshmapreg: "r6" is counter=6 {pushreg(r6);}
+pshmapreg: "r7" is counter=7 {pushreg(r7);}
+pshmapreg: "r8" is counter=8 {pushreg(r8);}
+pshmapreg: "r9" is counter=9 {pushreg(r9);}
+pshmapreg: "r10" is counter=10 {pushreg(r10);}
+pshmapreg: "r11" is counter=11 {pushreg(r11);}
+pshmapreg: "r12" is counter=12 {pushreg(r12);}
+pshmapreg: "r13" is counter=13 {pushreg(r13);}
+pshmapreg: "r14" is counter=14 {pushreg(r14);}
+pshmapreg: "r15" is counter=15 {pushreg(r15);}
 
 # Pop registers based on counter
-popmapreg: r0 is counter=0 & r0 {popreg(r0);}
-popmapreg: r1 is counter=1 & r1 {popreg(r1);}
-popmapreg: r2 is counter=2 & r2 {popreg(r2);}
-popmapreg: r3 is counter=3 & r3 {popreg(r3);}
-popmapreg: r4 is counter=4 & r4 {popreg(r4);}
-popmapreg: r5 is counter=5 & r5 {popreg(r5);}
-popmapreg: r6 is counter=6 & r6 {popreg(r6);}
-popmapreg: r7 is counter=7 & r7 {popreg(r7);}
-popmapreg: r8 is counter=8 & r8 {popreg(r8);}
-popmapreg: r9 is counter=9 & r9 {popreg(r9);}
-popmapreg: r10 is counter=10 & r10 {popreg(r10);}
-popmapreg: r11 is counter=11 & r11 {popreg(r11);}
-popmapreg: r12 is counter=12 & r12 {popreg(r12);}
-popmapreg: r13 is counter=13 & r13 {popreg(r13);}
-popmapreg: r14 is counter=14 & r14 {popreg(r14);}
-popmapreg: r15 is counter=15 & r15 {popreg(r15);}
+popmapreg: "r0" is counter=0 {popreg(r0);}
+popmapreg: "r1" is counter=1 {popreg(r1);}
+popmapreg: "r2" is counter=2 {popreg(r2);}
+popmapreg: "r3" is counter=3 {popreg(r3);}
+popmapreg: "r4" is counter=4 {popreg(r4);}
+popmapreg: "r5" is counter=5 {popreg(r5);}
+popmapreg: "r6" is counter=6 {popreg(r6);}
+popmapreg: "r7" is counter=7 {popreg(r7);}
+popmapreg: "r8" is counter=8 {popreg(r8);}
+popmapreg: "r9" is counter=9 {popreg(r9);}
+popmapreg: "r10" is counter=10 {popreg(r10);}
+popmapreg: "r11" is counter=11 {popreg(r11);}
+popmapreg: "r12" is counter=12 {popreg(r12);}
+popmapreg: "r13" is counter=13 {popreg(r13);}
+popmapreg: "r14" is counter=14 {popreg(r14);}
+popmapreg: "r15" is counter=15 {popreg(r15);}
 
 # Pop special registers based on counter
-popmapsreg: reti is counter=0 & reti {popreg(reti);}
-popmapsreg: rete is counter=1 & rete {popreg(rete);}
-popmapsreg: retx is counter=2 & retx {popreg(retx);}
-popmapsreg: rets is counter=3 & rets {popreg(rets);}
-popmapsreg: sr4 is counter=4 & sr4 {popreg(sr4);}
-popmapsreg: psr is counter=5 & psr {popreg(psr);}
-popmapsreg: cnum is counter=6 & cnum {popreg(cnum);}
-popmapsreg: sr7 is counter=7 & sr7 {popreg(sr7);}
+popmapsreg: "reti" is counter=0 {popreg(reti);}
+popmapsreg: "rete" is counter=1 {popreg(rete);}
+popmapsreg: "retx" is counter=2 {popreg(retx);}
+popmapsreg: "rets" is counter=3 {popreg(rets);}
+popmapsreg: "sr4" is counter=4 {popreg(sr4);}
+popmapsreg: "psr" is counter=5 {popreg(psr);}
+popmapsreg: "cnum" is counter=6 {popreg(cnum);}
+popmapsreg: "sr7" is counter=7 {popreg(sr7);}
+popmapsreg: "sr8" is counter=8 {popreg(sr8);}
+popmapsreg: "sr9" is counter=9 {popreg(sr9);}
+popmapsreg: "sr10" is counter=10 {popreg(sr10);}
+popmapsreg: "icfg" is counter=11 {popreg(icfg);}
+popmapsreg: "usp" is counter=12 {popreg(usp);}
+popmapsreg: "ssp" is counter=13 {popreg(ssp);}
+popmapsreg: "sp" is counter=14 {popreg(sp);}
+popmapsreg: "pc" is counter=15 {popreg(pc);}
+
+# Push special registers based on counter
+pshmapsreg: "reti" is counter=0 {pushreg(reti);}
+pshmapsreg: "rete" is counter=1 {pushreg(rete);}
+pshmapsreg: "retx" is counter=2 {pushreg(retx);}
+pshmapsreg: "rets" is counter=3 {pushreg(rets);}
+pshmapsreg: "sr4" is counter=4 {pushreg(sr4);}
+pshmapsreg: "psr" is counter=5 {pushreg(psr);}
+pshmapsreg: "cnum" is counter=6 {pushreg(cnum);}
+pshmapsreg: "sr7" is counter=7 {pushreg(sr7);}
+pshmapsreg: "sr8" is counter=8 {pushreg(sr8);}
+pshmapsreg: "sr9" is counter=9 {pushreg(sr9);}
+pshmapsreg: "sr10" is counter=10 {pushreg(sr10);}
+pshmapsreg: "icfg" is counter=11 {pushreg(icfg);}
+pshmapsreg: "usp" is counter=12 {pushreg(usp);}
+pshmapsreg: "ssp" is counter=13 {pushreg(ssp);}
+pshmapsreg: "sp" is counter=14 {pushreg(sp);}
+pshmapsreg: "pc" is counter=15 {pushreg(pc);}
 
 # Bit ops
 next: is epsilon [counter=counter+1;]{}
 prev: is epsilon [counter=counter-1;]{}
 mregread: is imm1631 [bitset=(imm1631 & (1 << counter))>>counter;]{}
-msregread: is imm0003 [bitset=(imm0003 & (1 << counter))>>counter;]{}
+
 pshmreg: pshmapreg is pshmapreg & bitset=1 [sep=1;]{}
 pshmreg: is bitset=0 {}
 popmreg: popmapreg is popmapreg & bitset=1 [sep=1;]{}
 popmreg: is bitset=0 {}
+pshmsreg: pshmapsreg is pshmapsreg & bitset=1 [sep=1;]{}
+pshmsreg: is bitset=0 {}
 popmsreg: popmapsreg is popmapsreg & bitset=1 [sep=1;]{}
 popmsreg: is bitset=0 {}
 msep: "," is  sep=1 & bitset=1 {}
@@ -85,11 +113,18 @@ popmapregs: popmapregs^popmreg^msep is counter<15 & mregread & msep & popmreg & 
 popmapregs: popmreg is counter=15 & mregread & popmreg {}
 popmap: popmapregs is popmapregs [bitset=0; counter=0; sep=0;] {}
 
-# Recursively generate our pop special registers
-popmapsregs: popmapsregs^popmsreg^msep is counter<3 & msregread & msep & popmsreg & next & popmapsregs
+# Recursively generate our special registers (for 32-bit instructions)
+pshmapsregs: pshmapsregs^pshmsreg^msep is counter<15 & mregread & msep & pshmsreg & next & pshmapsregs
+    { build pshmapsregs; build pshmsreg; }
+pshmapsregs: pshmsreg is counter=15 & mregread & pshmsreg {}
+pshsrmap: pshmapsregs is pshmapsregs [bitset=0; counter=0; sep=0;]{}
+
+popmapsregs: popmapsregs^popmsreg^msep is counter<15 & mregread & msep & popmsreg & next & popmapsregs
     { build popmsreg; build popmapsregs; }
-popmapsregs: popmsreg^msep is counter=3 & msep & msregread & popmsreg {}
+popmapsregs: popmsreg is counter=15 & mregread & popmsreg {}
 popsrmap: popmapsregs is popmapsregs [bitset=0; counter=0; sep=0;]{}
+
+
 
 #######################################
 # Registers boundary to register list
@@ -191,36 +226,7 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 }
 
 
-# /!\ Not sure that it only concerns psr/rets/reti as 6 lower bits indicate
-# 101001, which corresponds to the exact bitmap on special register bits
-# (reti:0, rets:3, psr:5)
-# Maybe considering that other registers combination might be pushed, but
-# not seen in existing code for now.
-# 
-# [--sp] = {psr, rets, reti}
-# => push {psr, rets, reti}
-# 
-:push {psr,rets,reti} is group=0 & ins0411=0x4e & regA=9 & psr & rets & reti
-{
-    mult_addr = sp;
-    pushreg(psr);
-    pushreg(rets);
-    pushreg(reti);
-    sp = mult_addr;
-}
 
-# 
-# {psr, rets, reti} = [sp++]
-# => pop {psr, rets, reti}
-# 
-:pop {psr,rets,reti} is group=0 & ins0411=0x4a & regA=9 & psr & rets & reti
-{
-    mult_addr = sp;
-    popreg(reti);
-    popreg(rets);
-    popreg(psr);
-    sp = mult_addr;
-}
 
 #
 # {rets, regs...} = [sp++]
@@ -247,14 +253,157 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
     sp = mult_addr;
 }
 
+# Pop 16-bit special registers subtable
+popsregset16: "{}" is imm0005=0 {  }
+popsregset16: "{reti}" is imm0005=1 { popreg(reti);  }
+popsregset16: "{rete}" is imm0005=2 { popreg(rete);  }
+popsregset16: "{rete, reti}" is imm0005=3 { popreg(reti); popreg(rete);  }
+popsregset16: "{retx}" is imm0005=4 { popreg(retx);  }
+popsregset16: "{retx, reti}" is imm0005=5 { popreg(reti); popreg(retx);  }
+popsregset16: "{retx, rete}" is imm0005=6 { popreg(rete); popreg(retx);  }
+popsregset16: "{retx, rete, reti}" is imm0005=7 { popreg(reti); popreg(rete); popreg(retx);  }
+popsregset16: "{rets}" is imm0005=8 { popreg(rets);  }
+popsregset16: "{rets, reti}" is imm0005=9 { popreg(reti); popreg(rets);  }
+popsregset16: "{rets, rete}" is imm0005=10 { popreg(rete); popreg(rets);  }
+popsregset16: "{rets, rete, reti}" is imm0005=11 { popreg(reti); popreg(rete); popreg(rets);  }
+popsregset16: "{rets, retx}" is imm0005=12 { popreg(retx); popreg(rets);  }
+popsregset16: "{rets, retx, reti}" is imm0005=13 { popreg(reti); popreg(retx); popreg(rets);  }
+popsregset16: "{rets, retx, rete}" is imm0005=14 { popreg(rete); popreg(retx); popreg(rets);  }
+popsregset16: "{rets, retx, rete, reti}" is imm0005=15 { popreg(reti); popreg(rete); popreg(retx); popreg(rets);  }
+popsregset16: "{sr4}" is imm0005=16 { popreg(sr4);  }
+popsregset16: "{sr4, reti}" is imm0005=17 { popreg(reti); popreg(sr4);  }
+popsregset16: "{sr4, rete}" is imm0005=18 { popreg(rete); popreg(sr4);  }
+popsregset16: "{sr4, rete, reti}" is imm0005=19 { popreg(reti); popreg(rete); popreg(sr4);  }
+popsregset16: "{sr4, retx}" is imm0005=20 { popreg(retx); popreg(sr4);  }
+popsregset16: "{sr4, retx, reti}" is imm0005=21 { popreg(reti); popreg(retx); popreg(sr4);  }
+popsregset16: "{sr4, retx, rete}" is imm0005=22 { popreg(rete); popreg(retx); popreg(sr4);  }
+popsregset16: "{sr4, retx, rete, reti}" is imm0005=23 { popreg(reti); popreg(rete); popreg(retx); popreg(sr4);  }
+popsregset16: "{sr4, rets}" is imm0005=24 { popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, reti}" is imm0005=25 { popreg(reti); popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, rete}" is imm0005=26 { popreg(rete); popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, rete, reti}" is imm0005=27 { popreg(reti); popreg(rete); popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, retx}" is imm0005=28 { popreg(retx); popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, retx, reti}" is imm0005=29 { popreg(reti); popreg(retx); popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, retx, rete}" is imm0005=30 { popreg(rete); popreg(retx); popreg(rets); popreg(sr4);  }
+popsregset16: "{sr4, rets, retx, rete, reti}" is imm0005=31 { popreg(reti); popreg(rete); popreg(retx); popreg(rets); popreg(sr4);  }
+popsregset16: "{psr}" is imm0005=32 { popreg(psr);  }
+popsregset16: "{psr, reti}" is imm0005=33 { popreg(reti); popreg(psr);  }
+popsregset16: "{psr, rete}" is imm0005=34 { popreg(rete); popreg(psr);  }
+popsregset16: "{psr, rete, reti}" is imm0005=35 { popreg(reti); popreg(rete); popreg(psr);  }
+popsregset16: "{psr, retx}" is imm0005=36 { popreg(retx); popreg(psr);  }
+popsregset16: "{psr, retx, reti}" is imm0005=37 { popreg(reti); popreg(retx); popreg(psr);  }
+popsregset16: "{psr, retx, rete}" is imm0005=38 { popreg(rete); popreg(retx); popreg(psr);  }
+popsregset16: "{psr, retx, rete, reti}" is imm0005=39 { popreg(reti); popreg(rete); popreg(retx); popreg(psr);  }
+popsregset16: "{psr, rets}" is imm0005=40 { popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, reti}" is imm0005=41 { popreg(reti); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, rete}" is imm0005=42 { popreg(rete); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, rete, reti}" is imm0005=43 { popreg(reti); popreg(rete); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, retx}" is imm0005=44 { popreg(retx); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, retx, reti}" is imm0005=45 { popreg(reti); popreg(retx); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, retx, rete}" is imm0005=46 { popreg(rete); popreg(retx); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, rets, retx, rete, reti}" is imm0005=47 { popreg(reti); popreg(rete); popreg(retx); popreg(rets); popreg(psr);  }
+popsregset16: "{psr, sr4}" is imm0005=48 { popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, reti}" is imm0005=49 { popreg(reti); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rete}" is imm0005=50 { popreg(rete); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rete, reti}" is imm0005=51 { popreg(reti); popreg(rete); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, retx}" is imm0005=52 { popreg(retx); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, retx, reti}" is imm0005=53 { popreg(reti); popreg(retx); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, retx, rete}" is imm0005=54 { popreg(rete); popreg(retx); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, retx, rete, reti}" is imm0005=55 { popreg(reti); popreg(rete); popreg(retx); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets}" is imm0005=56 { popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, reti}" is imm0005=57 { popreg(reti); popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, rete}" is imm0005=58 { popreg(rete); popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, rete, reti}" is imm0005=59 { popreg(reti); popreg(rete); popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, retx}" is imm0005=60 { popreg(retx); popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, retx, reti}" is imm0005=61 { popreg(reti); popreg(retx); popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, retx, rete}" is imm0005=62 { popreg(rete); popreg(retx); popreg(rets); popreg(sr4); popreg(psr);  }
+popsregset16: "{psr, sr4, rets, retx, rete, reti}" is imm0005=63 { popreg(reti); popreg(rete); popreg(retx); popreg(rets); popreg(sr4); popreg(psr);  }
+
+# Push 16-bit special registers subtable
+pshsregset16: "{}" is imm0005=0 {  }
+pshsregset16: "{reti}" is imm0005=1 { pushreg(reti);  }
+pshsregset16: "{rete}" is imm0005=2 { pushreg(rete);  }
+pshsregset16: "{rete, reti}" is imm0005=3 { pushreg(rete); pushreg(reti);  }
+pshsregset16: "{retx}" is imm0005=4 { pushreg(retx);  }
+pshsregset16: "{retx, reti}" is imm0005=5 { pushreg(retx); pushreg(reti);  }
+pshsregset16: "{retx, rete}" is imm0005=6 { pushreg(retx); pushreg(rete);  }
+pshsregset16: "{retx, rete, reti}" is imm0005=7 { pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{rets}" is imm0005=8 { pushreg(rets);  }
+pshsregset16: "{rets, reti}" is imm0005=9 { pushreg(rets); pushreg(reti);  }
+pshsregset16: "{rets, rete}" is imm0005=10 { pushreg(rets); pushreg(rete);  }
+pshsregset16: "{rets, rete, reti}" is imm0005=11 { pushreg(rets); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{rets, retx}" is imm0005=12 { pushreg(rets); pushreg(retx);  }
+pshsregset16: "{rets, retx, reti}" is imm0005=13 { pushreg(rets); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{rets, retx, rete}" is imm0005=14 { pushreg(rets); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{rets, retx, rete, reti}" is imm0005=15 { pushreg(rets); pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{sr4}" is imm0005=16 { pushreg(sr4);  }
+pshsregset16: "{sr4, reti}" is imm0005=17 { pushreg(sr4); pushreg(reti);  }
+pshsregset16: "{sr4, rete}" is imm0005=18 { pushreg(sr4); pushreg(rete);  }
+pshsregset16: "{sr4, rete, reti}" is imm0005=19 { pushreg(sr4); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{sr4, retx}" is imm0005=20 { pushreg(sr4); pushreg(retx);  }
+pshsregset16: "{sr4, retx, reti}" is imm0005=21 { pushreg(sr4); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{sr4, retx, rete}" is imm0005=22 { pushreg(sr4); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{sr4, retx, rete, reti}" is imm0005=23 { pushreg(sr4); pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{sr4, rets}" is imm0005=24 { pushreg(sr4); pushreg(rets);  }
+pshsregset16: "{sr4, rets, reti}" is imm0005=25 { pushreg(sr4); pushreg(rets); pushreg(reti);  }
+pshsregset16: "{sr4, rets, rete}" is imm0005=26 { pushreg(sr4); pushreg(rets); pushreg(rete);  }
+pshsregset16: "{sr4, rets, rete, reti}" is imm0005=27 { pushreg(sr4); pushreg(rets); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{sr4, rets, retx}" is imm0005=28 { pushreg(sr4); pushreg(rets); pushreg(retx);  }
+pshsregset16: "{sr4, rets, retx, reti}" is imm0005=29 { pushreg(sr4); pushreg(rets); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{sr4, rets, retx, rete}" is imm0005=30 { pushreg(sr4); pushreg(rets); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{sr4, rets, retx, rete, reti}" is imm0005=31 { pushreg(sr4); pushreg(rets); pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr}" is imm0005=32 { pushreg(psr);  }
+pshsregset16: "{psr, reti}" is imm0005=33 { pushreg(psr); pushreg(reti);  }
+pshsregset16: "{psr, rete}" is imm0005=34 { pushreg(psr); pushreg(rete);  }
+pshsregset16: "{psr, rete, reti}" is imm0005=35 { pushreg(psr); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, retx}" is imm0005=36 { pushreg(psr); pushreg(retx);  }
+pshsregset16: "{psr, retx, reti}" is imm0005=37 { pushreg(psr); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{psr, retx, rete}" is imm0005=38 { pushreg(psr); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{psr, retx, rete, reti}" is imm0005=39 { pushreg(psr); pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, rets}" is imm0005=40 { pushreg(psr); pushreg(rets);  }
+pshsregset16: "{psr, rets, reti}" is imm0005=41 { pushreg(psr); pushreg(rets); pushreg(reti);  }
+pshsregset16: "{psr, rets, rete}" is imm0005=42 { pushreg(psr); pushreg(rets); pushreg(rete);  }
+pshsregset16: "{psr, rets, rete, reti}" is imm0005=43 { pushreg(psr); pushreg(rets); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, rets, retx}" is imm0005=44 { pushreg(psr); pushreg(rets); pushreg(retx);  }
+pshsregset16: "{psr, rets, retx, reti}" is imm0005=45 { pushreg(psr); pushreg(rets); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{psr, rets, retx, rete}" is imm0005=46 { pushreg(psr); pushreg(rets); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{psr, rets, retx, rete, reti}" is imm0005=47 { pushreg(psr); pushreg(rets); pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, sr4}" is imm0005=48 { pushreg(psr); pushreg(sr4);  }
+pshsregset16: "{psr, sr4, reti}" is imm0005=49 { pushreg(psr); pushreg(sr4); pushreg(reti);  }
+pshsregset16: "{psr, sr4, rete}" is imm0005=50 { pushreg(psr); pushreg(sr4); pushreg(rete);  }
+pshsregset16: "{psr, sr4, rete, reti}" is imm0005=51 { pushreg(psr); pushreg(sr4); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, sr4, retx}" is imm0005=52 { pushreg(psr); pushreg(sr4); pushreg(retx);  }
+pshsregset16: "{psr, sr4, retx, reti}" is imm0005=53 { pushreg(psr); pushreg(sr4); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{psr, sr4, retx, rete}" is imm0005=54 { pushreg(psr); pushreg(sr4); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{psr, sr4, retx, rete, reti}" is imm0005=55 { pushreg(psr); pushreg(sr4); pushreg(retx); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, sr4, rets}" is imm0005=56 { pushreg(psr); pushreg(sr4); pushreg(rets);  }
+pshsregset16: "{psr, sr4, rets, reti}" is imm0005=57 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(reti);  }
+pshsregset16: "{psr, sr4, rets, rete}" is imm0005=58 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(rete);  }
+pshsregset16: "{psr, sr4, rets, rete, reti}" is imm0005=59 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(rete); pushreg(reti);  }
+pshsregset16: "{psr, sr4, rets, retx}" is imm0005=60 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(retx);  }
+pshsregset16: "{psr, sr4, rets, retx, reti}" is imm0005=61 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(retx); pushreg(reti);  }
+pshsregset16: "{psr, sr4, rets, retx, rete}" is imm0005=62 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(retx); pushreg(rete);  }
+pshsregset16: "{psr, sr4, rets, retx, rete, reti}" is imm0005=63 { pushreg(psr); pushreg(sr4); pushreg(rets); pushreg(retx); pushreg(rete); pushreg(reti);  }
+
 #
 # {sregs...} = [sp++]
 # => pop {sregs...}
 #
-:pop {popsrmap} is group=0 & ins0412=0x048 ... & popsrmap
+:pop popsregset16 is group=0 & ins0612=0x12 & imm0005 & popsregset16
 {
     mult_addr = sp;
-    build popsrmap;
+    build popsregset16;
+    sp = mult_addr;
+}
+
+#
+# [--sp] = {sregs...}
+# => push {sregs...}
+#
+:push pshsregset16 is group=0 & ins0612=0x13 & imm0005 & pshsregset16
+{
+    mult_addr = sp;
+    build pshsregset16;
     sp = mult_addr;
 }
 
@@ -340,55 +489,155 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 }
 
 #
-# [sp+imm5] = rA
+# [--sp] = {sregs}
+# => push {sregs}
+#
+:push {pshsrmap} is group=7 & ins0011=0x958 ; pshsrmap
+{
+    mult_addr = sp;
+    build pshsrmap;
+    sp = mult_addr;
+}
+
+#
+# {sregs} = [sp++]
+# => pop {sregs}
+#
+:pop {popsrmap} is group=7 & ins0011=0x950 ; popsrmap
+{
+    mult_addr = sp;
+    build popsrmap;
+    sp = mult_addr;
+}
+
+###########################################################################################
+# Load/Store Multiple to General Pointer Registers
+###########################################################################################
+
+#
+# {regs...} = [rA++] (LMIA)
+#
+:lmia regA, {popmap} is group=7 & ins0411=0xb1 & regA ; popmap
+{
+    mult_addr = regA;
+    build popmap;
+    regA = mult_addr;
+}
+
+#
+# [rA++] = {regs...} (SMIA)
+#
+:smia regA, {pshmap} is group=7 & ins0411=0xb3 & regA ; pshmap
+{
+    mult_addr = regA;
+    build pshmap;
+    regA = mult_addr;
+}
+
+#
+# {regs...} = [-rA] (LMD)
+#
+:lmd regA, {popmap} is group=7 & ins0411=0xb4 & regA ; popmap
+{
+    mult_addr = regA;
+    build popmap;
+    regA = mult_addr;
+}
+
+#
+# {regs...} = [--rA] (LMDB)
+#
+:lmdb regA, {popmap} is group=7 & ins0411=0xb5 & regA ; popmap
+{
+    mult_addr = regA;
+    build popmap;
+    regA = mult_addr;
+}
+
+#
+# [-rA] = {regs...} (SMD)
+#
+:smd regA, {pshmap} is group=7 & ins0411=0xb6 & regA ; pshmap
+{
+    mult_addr = regA;
+    build pshmap;
+    regA = mult_addr;
+}
+
+#
+# [--rA] = {regs...} (SMDB)
+#
+:smdb regA, {pshmap} is group=7 & ins0411=0xb7 & regA ; pshmap
+{
+    mult_addr = regA;
+    build pshmap;
+    regA = mult_addr;
+}
+
+#
+# [sp] = rA
 # => sw rA, [sp]
 #
-:sw regA, [sp] is group=1 & ins0407=0x8 & regA & imm0812=0 & sp
+:sw regA, ["sp"] is group=1 & ins0707=1 & ins0606=0 & imm0505=0 & ins0404=0 & regA & imm0812=0
 {
     *:4 sp = regA;
 }
 
 #
-# [sp+imm5] = rA
-# => sw rA, [sp+imm5]
+# [sp+imm6] = rA
+# => sw rA, [sp+imm6]
 #
-:sw regA, [sp+imm5] is group=1 & ins0407=0x8 & regA & imm0812>0 & imm0812 & sp
-[ imm5 = imm0812 * 4; ]
+:sw regA, ["sp"+imm6] is group=1 & ins0707=1 & ins0606=0 & imm0505=0 & ins0404=0 & regA & imm0812>0 & imm0812
+[ imm6 = imm0812 * 4; ]
 {
-    addr:4 = sp + imm5;
+    addr:4 = sp + imm6;
+    *:4 addr = regA;
+}
+
+:sw regA, ["sp"+imm6] is group=1 & ins0707=1 & ins0606=0 & imm0505=1 & ins0404=0 & regA & imm0812
+[ imm6 = ((1 << 5) | imm0812) * 4; ]
+{
+    addr:4 = sp + imm6;
     *:4 addr = regA;
 }
 
 #
-# [sp+imm8] = rA
-# => sw rA, [sp+imm8]
+# [sp+imm12] = rA
+# => sw rA, [sp+imm12]
 #
-:sw eregA, [sp+imm8] is group=7 & ins0011=0x9d4 & sp ; eregA & imm1616=1 & imm1719 & imm2427
-[ imm8 = (imm1719 << 1) | (imm2427 << 4); ]
+:sw eregA, ["sp"+imm12] is group=7 & ins0011=0x9d4 ; eregA & imm1617=1 & imm1827
+[ imm12 = imm1827 << 2; ]
 {
-    addr:4 = sp + imm8;
+    local addr:4 = sp + imm12;
     *:4 addr = eregA;
 }
 
 #
-# rA = [sp+#imm5]
-# => lw rA, [sp+imm5]
+# rA = [sp+#imm6]
+# => lw rA, [sp+imm6]
 #
-:lw regA, [sp+imm5] is group=1 & ins0407=0 & regA & imm0812>0 & imm0812 & sp
-[ imm5 = imm0812 * 4; ]
+:lw regA, ["sp"+imm6] is group=1 & ins0707=0 & ins0606=0 & imm0505=0 & ins0404=0 & regA & imm0812>0 & imm0812
+[ imm6 = imm0812 * 4; ]
 {
-    addr:4 = sp + imm5;
+    local addr:4 = sp + imm6;
+    regA = *:4 addr;
+}
+
+:lw regA, ["sp"+imm6] is group=1 & ins0707=0 & ins0606=0 & imm0505=1 & ins0404=0 & regA & imm0812
+[ imm6 = ((1 << 5) | imm0812) * 4; ]
+{
+    local addr:4 = sp + imm6;
     regA = *:4 addr;
 }
 
 #
-# rA = [sp+imm8]
-# => lw rA, [sp+imm8]
+# rA = [sp+imm12]
+# => lw rA, [sp+imm12]
 #
-:lw eregA, [sp+imm8] is group=7 & ins0011=0x9d4 & sp ; eregA & imm1616=0 & imm1719 & imm2427
-[ imm8 = (imm1719 << 1) | (imm2427 << 4); ]
+:lw eregA, ["sp"+imm12] is group=7 & ins0011=0x9d4 ; eregA & imm1617=0 & imm1827
+[ imm12 = imm1827 << 2; ]
 {
-    addr:4 = sp + imm8;
+    local addr:4 = sp + imm12;
     eregA = *:4 addr;
 }
 
@@ -396,10 +645,10 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 # d[sp+imm12] = rB_rA
 # => sdw rB_rA, [sp+imm12]
 #
-:sdw edregA, [sp+imm12] is group=7 & ins0011=0x9d0 & sp; edregA & imm1616=1 & imm1627
-[ imm12 = (imm1627 & 0xffe); ]
+:sdw edregA, ["sp"+imm12] is group=7 & ins0011=0x9d0 ; edregA & imm1617=1 & imm1827
+[ imm12 = imm1827 << 2; ]
 {
-    addr:4 = sp + imm12;
+    local addr:4 = sp + imm12;
     *:8 addr = edregA;
 }
 
@@ -407,10 +656,10 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 # h[sp+imm12] = rA
 # => sh rA, [sp+imm12]
 #
-:sh eregA, [sp+imm12] is group=7 & ins0011=0x9d8 & sp; eregA & imm1616=1 & imm1627
-[ imm12 = (imm1627 & 0xffe); ]
+:sh eregA, ["sp"+imm12] is group=7 & ins0011=0x9d8 ; eregA & imm1616=1 & imm1727
+[ imm12 = (imm1727 << 1); ]
 {
-    addr:4 = sp + imm12;
+    local addr:4 = sp + imm12;
     *:2 addr = eregA:2;
 }
 
@@ -418,9 +667,9 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 # b[sp+imm12] = rA
 # => sb rA, [sp+imm12]
 #
-:sb eregA, [sp+imm1627] is group=7 & ins0011=0x9de & sp; eregA & imm1627
+:sb eregA, ["sp"+imm1627] is group=7 & ins0011=0x9de ; eregA & imm1627
 {
-    addr:4 = sp + imm1627;
+    local addr:4 = sp + imm1627;
     *:1 addr = eregA:1;
 }
 
@@ -428,9 +677,9 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 # rA = b[sp+imm12] (s)
 # => lb.s rA, [sp+imm12] (signed)
 #
-:lb.s eregA, [sp+imm1627] is group=7 & ins0011=0x9dd & sp ; eregA & imm1627
+:lb.s eregA, ["sp"+imm1627] is group=7 & ins0011=0x9dd ; eregA & imm1627
 {
-    addr:4 = sp + imm1627;
+    local addr:4 = sp + imm1627;
     eregA = sext(*:1 addr);
 }
 
@@ -439,10 +688,10 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 # rB_rA = d[sp+imm12]
 # => ldw rB_rA, [sp+imm12]
 #
-:ldw edregA, [sp+imm12] is group=7 & ins0011=0x9d0 & sp; edregA & imm1616=0 & imm1627
-[ imm12 = (imm1627 & 0xffe); ]
+:ldw edregA, ["sp"+imm12] is group=7 & ins0011=0x9d0 ; edregA & imm1617=0 & imm1827
+[ imm12 = imm1827 << 2; ]
 {
-    addr:4 = sp + imm12;
+    local addr:4 = sp + imm12;
     edregA = *:8 addr;
 }
 
@@ -450,7 +699,7 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 # rA = [sp+#imm5]
 # => lw rA, [sp+imm5]
 #
-:lw regA, [sp] is group=1 & ins0407=0 & regA & imm0812=0 & sp
+:lw regA, ["sp"] is group=1 & ins0707=0 & ins0606=0 & imm0505=0 & ins0404=0 & regA & imm0812=0
 {
     regA = *:4 sp;
 }
@@ -458,21 +707,37 @@ poppcregs: {pc,popreglist4} is popreglist4 & pc & ins0003
 
 #
 # rA = h[sp+imm12] (u)
-# => lh rA, [sp+imm12]
+# => lh.z rA, [sp+imm12]
 #
-:lh eregA, [sp+imm12] is group=7 & ins0011=0x9d8 & sp; eregA & imm1616=0 & imm1627
-[ imm12 = (imm1627 & 0xffe); ]
+:lh.z eregA, ["sp"+imm12] is group=7 & ins0011=0x9d8 ; eregA & imm1616=0 & imm1727
+[ imm12 = (imm1727 << 1); ]
 {
-    addr:4 = sp + imm12;
-    eregA = *:2 addr;
+    local addr:4 = sp + imm12;
+    eregA = zext(*:2 addr);
 }
 
 #
-# rA = [sp+imm12] (unsigned)
-# => lb rA, [sp+imm12]
+# rA = h[sp+imm12] (s)
+# => lh.s rA, [sp+imm12]
 #
-:lb eregA, [sp+imm1627] is group=7 & ins0011=0x9dc & sp; eregA & imm1627
+:lh.s eregA, ["sp"] is group=7 & ins0011=0x9d9 ; eregA & imm1616=0 & imm1727=0
 {
-    addr:4 = sp + imm1627;
-    eregA = *:1 addr;
+    eregA = sext(*:2 sp);
+}
+
+:lh.s eregA, ["sp"+imm12] is group=7 & ins0011=0x9d9 ; eregA & imm1616=0 & imm1727
+[ imm12 = (imm1727 << 1); ]
+{
+    local addr:4 = sp + imm12;
+    eregA = sext(*:2 addr);
+}
+
+#
+# rA = b[sp+imm12] (u)
+# => lb.z rA, [sp+imm12]
+#
+:lb.z eregA, ["sp"+imm1627] is group=7 & ins0011=0x9dc ; eregA & imm1627
+{
+    local addr:4 = sp + imm1627;
+    eregA = zext(*:1 addr);
 }
