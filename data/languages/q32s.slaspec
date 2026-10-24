@@ -280,6 +280,7 @@ define pcodeop TODO;
 @include "q32s_ins_bitops.sinc"
 @include "q32s_ins_logicops.sinc"
 @include "q32s_ins_regfield.sinc"
+@include "q32s_ins_extra.sinc"
 
 ##########################################################################################
 # Uncategorized #
