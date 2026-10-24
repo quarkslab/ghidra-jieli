@@ -212,7 +212,7 @@ pcrel17m2: res is addr1631s
 # 23-bit jump immediate (pc-relative)
 #
 pcrel23m2: res is addr0005s ; addr1631
-	[ res = ((addr0005s << 17) | (addr1631 << 1)) + inst_next; ]
+	[ res = (((addr0005s << 17) | (addr1631 << 1)) + inst_next) & 0x1ffffff; ]
 	{ export *:4 res; }
 
 #
