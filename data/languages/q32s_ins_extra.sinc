@@ -1,0 +1,34 @@
+##################
+# Encodings checked against the bd19 mask ROM listing (rom.lst) in Jieli-Tech/fw-AC63_BT_SDK
+##################
+
+:lsl regE, regF, imm1923 is group=7 & ins0012=0x1DF0 ; regE & regF & imm1923 { regE = regF << imm1923; }
+:lsr regE, regF, imm1923 is group=7 & ins0012=0x1DF2 ; regE & regF & imm1923 { regE = regF >> imm1923; }
+:rot regE, regF, imm1923 is group=7 & ins0012=0x1DF4 ; regE & regF & imm1923 { regE = (regF << imm1923) | (regF >> (32 - imm1923)); }
+:asr regE, regF, imm1923 is group=7 & ins0012=0x1DF6 ; regE & regF & imm1923 { regE = regF s>> imm1923; }
+:lsl regE, regF, regG is group=7 & ins0012=0x1DF8 ; regE & regF & regG { regE = regF << regG; }
+:lsr regE, regF, regG is group=7 & ins0012=0x1DFA ; regE & regF & regG { regE = regF >> regG; }
+:asr regE, regF, regG is group=7 & ins0012=0x1DFC ; regE & regF & regG { regE = regF s>> regG; }
+:rot regE, regF, regG is group=7 & ins0012=0x1DFE ; regE & regF & regG { regE = (regF << regG) | (regF >> (32 - regG)); }
+define pcodeop clz;
+:clz regE, regF is group=7 & ins0012=0x1DE8 ; regE & regF { regE = clz(regF); }
+
+:jeq regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F20 ; regE & weirdimm ; pcrel17m2 { if (regE == weirdimm) goto pcrel17m2; }
+:jne regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F21 ; regE & weirdimm ; pcrel17m2 { if (regE != weirdimm) goto pcrel17m2; }
+:jcs regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F22 ; regE & weirdimm ; pcrel17m2 { if (regE >= weirdimm) goto pcrel17m2; }
+:jcc regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F23 ; regE & weirdimm ; pcrel17m2 { if (regE < weirdimm) goto pcrel17m2; }
+:jhi regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F28 ; regE & weirdimm ; pcrel17m2 { if (regE > weirdimm) goto pcrel17m2; }
+:jls regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F29 ; regE & weirdimm ; pcrel17m2 { if (regE <= weirdimm) goto pcrel17m2; }
+:jge regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F2A ; regE & weirdimm ; pcrel17m2 { if (regE s>= weirdimm) goto pcrel17m2; }
+:jlt regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F2B ; regE & weirdimm ; pcrel17m2 { if (regE s< weirdimm) goto pcrel17m2; }
+:jgt regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F2C ; regE & weirdimm ; pcrel17m2 { if (regE s> weirdimm) goto pcrel17m2; }
+:jle regE, "#"weirdimm, pcrel17m2 is group=7 & ins0012=0x1F2D ; regE & weirdimm ; pcrel17m2 { if (regE s<= weirdimm) goto pcrel17m2; }
+
+:pops {ins0003} is group=0 & ins0412=0x018 & ins0003 { }
+:pops {"psr", ins0003} is group=0 & ins0412=0x01A & ins0003 { }
+:pushs {ins0003} is group=0 & ins0412=0x01C & ins0003 { }
+:pushs {"psr", ins0003} is group=0 & ins0412=0x01E & ins0003 { }
+:pop {imm1631} is group=7 & ins0012=0x1370 ; imm1631 { }
+:push {imm1631} is group=7 & ins0012=0x1378 ; imm1631 { }
+:pops {imm1631} is group=7 & ins0012=0x137C ; imm1631 { }
+:pushs {imm1631} is group=7 & ins0012=0x137E ; imm1631 { }

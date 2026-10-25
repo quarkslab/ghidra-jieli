@@ -175,10 +175,10 @@
 { if (regA > imm0411s) goto pcrel13m2; }
 
 :jls regA, "#"imm0411s, pcrel13m2 is group=7 & ins1212=0 & imm0411s & regA ; ins2831=0x9 & pcrel13m2
-{ if (regA > imm0411s) goto pcrel13m2; }
+{ if (regA <= imm0411s) goto pcrel13m2; }
 
 :jge regA, "#"imm0411s, pcrel13m2 is group=7 & ins1212=0 & imm0411s & regA ; ins2831=0xA & pcrel13m2
-{ if (regA s<= imm0411s) goto pcrel13m2; }
+{ if (regA s>= imm0411s) goto pcrel13m2; }
 
 :jlt regA, "#"imm0411s, pcrel13m2 is group=7 & ins1212=0 & imm0411s & regA ; ins2831=0xB & pcrel13m2
 { if (regA s< imm0411s) goto pcrel13m2; }
@@ -209,10 +209,10 @@
 { if (regA > regB) goto pcrel13m2; }
 
 :jls regA, regB, pcrel13m2 is group=7 & ins0812=0x12 & regB & regA ; ins2831=0x9 & pcrel13m2
-{ if (regA > regB) goto pcrel13m2; }
+{ if (regA <= regB) goto pcrel13m2; }
 
 :jge regA, regB, pcrel13m2 is group=7 & ins0812=0x12 & regB & regA ; ins2831=0xA & pcrel13m2
-{ if (regA s<= regB) goto pcrel13m2; }
+{ if (regA s>= regB) goto pcrel13m2; }
 
 :jlt regA, regB, pcrel13m2 is group=7 & ins0812=0x12 & regB & regA ; ins2831=0xB & pcrel13m2
 { if (regA s< regB) goto pcrel13m2; }
@@ -243,10 +243,10 @@
 { if (regE > imm1627s) goto pcrel17m2; }
 
 :jls regE, imm1627s, pcrel17m2 is group=7 & ins0012=0x1F09 ; regE & imm1627s ; pcrel17m2
-{ if (regE > imm1627s) goto pcrel17m2; }
+{ if (regE <= imm1627s) goto pcrel17m2; }
 
 :jge regE, imm1627s, pcrel17m2 is group=7 & ins0012=0x1F0A ; regE & imm1627s ; pcrel17m2
-{ if (regE s<= imm1627s) goto pcrel17m2; }
+{ if (regE s>= imm1627s) goto pcrel17m2; }
 
 :jlt regE, imm1627s, pcrel17m2 is group=7 & ins0012=0x1F0B ; regE & imm1627s ; pcrel17m2
 { if (regE s< imm1627s) goto pcrel17m2; }
